@@ -35,6 +35,7 @@ require APP_PATH . '/views/layout/head.php';
         <button onclick="filterCat('<?= e($cat['slug']) ?>')" data-cat="<?= e($cat['slug']) ?>"
           class="cat-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium"
           style="--cat-color: <?= e($cat['color']) ?>">
+          <span class="cat-icon"><?= getCategoryEmoji($cat['icon'] ?? '') ?></span>
           <?= e($cat['name']) ?>
         </button>
         <?php endforeach; ?>
@@ -105,6 +106,23 @@ const PRELOAD_CAT = '<?= e($preloadCat ?? '') ?>';
 const CHATBOT_ACTIVE    = <?= setting('chatbot_active', '0') === '1' ? 'true' : 'false' ?>;
 const CHATBOT_WA_NUMBER = '<?= e(setting('chatbot_wa_number', '')) ?>';
 
+// ─── Icon name → emoji mapping for category symbols ────────────────────
+const ICON_MAP = {
+  'utensils':      '🍽️',
+  'hotel':         '🏨',
+  'wine':          '🍷',
+  'landmark':      '🏛️',
+  'star':          '⭐',
+  'waves':         '🌊',
+  'shopping-bag':  '🛍️',
+  'map-pin':       '📍',
+  'default':       '📍',
+};
+
+function iconToEmoji(iconName) {
+  return ICON_MAP[iconName] || ICON_MAP['default'];
+}
+
 // Initialise map
 const map = L.map('map', { zoomControl: true }).setView([MAP_LAT, MAP_LNG], MAP_ZOOM);
 
@@ -130,10 +148,13 @@ let allPois = [];
 let currentCat = PRELOAD_CAT;
 let currentSearch = '';
 
-function createIcon(color) {
+function createIcon(color, iconName) {
+  const emoji = iconToEmoji(iconName);
   return L.divIcon({
     className: '',
-    html: `<div style="background:${color};width:32px;height:32px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.3)"></div>`,
+    html: `<div style="background:${color};width:32px;height:32px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center">
+      <span style="transform:rotate(45deg);font-size:15px;line-height:1;display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,0.2))">${emoji}</span>
+    </div>`,
     iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -36],
   });
 }
@@ -148,7 +169,7 @@ function loadPOIs() {
       allPois = pois;
       pois.forEach(poi => {
         if (!poi.lat || !poi.lng) return;
-        const m = L.marker([poi.lat, poi.lng], { icon: createIcon(poi.category_color || '#3B82F6') });
+        const m = L.marker([poi.lat, poi.lng], { icon: createIcon(poi.category_color || '#3B82F6', poi.category_icon) });
         m.addTo(map);
         m.on('click', () => showPOI(poi));
         markers.push(m);
@@ -171,12 +192,13 @@ function showPOI(poi) {
   });
 
   const isFav = isFavorito(poi.id);
+  const categoryEmoji = iconToEmoji(poi.category_icon);
   const html = `
     <img src="${poi.cover}" class="w-full h-40 object-cover rounded-xl mb-3" onerror="this.src='/assets/img/placeholder.svg'">
     <div class="flex items-start justify-between gap-2 mb-2">
       <h3 class="font-bold text-gray-900 text-base leading-tight">${poi.name}</h3>
       <div class="flex items-center gap-1 shrink-0">
-        <span class="text-xs px-2 py-1 rounded-full text-white font-medium" style="background:${poi.category_color}">${poi.category}</span>
+        <span class="text-xs px-2 py-1 rounded-full text-white font-medium" style="background:${poi.category_color}">${categoryEmoji} ${poi.category}</span>
         <button onclick="toggleFavorito(${poi.id})" id="fav-btn-${poi.id}"
           class="p-1.5 rounded-full hover:bg-pink-50 transition" title="${isFav ? 'Quitar de favoritos' : 'Añadir a favoritos'}">
           <svg class="w-5 h-5 ${isFav ? 'text-pink-500 fill-current' : 'text-gray-300'}" viewBox="0 0 24 24">
@@ -363,18 +385,20 @@ function openFavoritos() {
   if (favs.length === 0) {
     list.innerHTML = '<p class="text-center text-gray-400 py-8">Aún no tienes favoritos.<br>Toca el corazón en cualquier negocio para añadirlo.</p>';
   } else {
-    list.innerHTML = favs.map(poi => `
+    list.innerHTML = favs.map(poi => {
+      const categoryEmoji = iconToEmoji(poi.category_icon);
+      return `
       <div class="flex items-center gap-3 p-3 border border-gray-100 rounded-xl hover:bg-gray-50 cursor-pointer fav-item" data-poi-id="${poi.id}">
         <img src="${poi.cover}" class="w-14 h-14 object-cover rounded-lg shrink-0" onerror="this.src='/assets/img/placeholder.svg'">
         <div class="flex-1 min-w-0">
           <p class="font-semibold text-gray-900 text-sm truncate">${poi.name}</p>
-          <span class="text-xs px-2 py-0.5 rounded-full text-white font-medium" style="background:${poi.category_color}">${poi.category}</span>
+          <span class="text-xs px-2 py-0.5 rounded-full text-white font-medium" style="background:${poi.category_color}">${categoryEmoji} ${poi.category}</span>
         </div>
         <button data-remove-id="${poi.id}" class="p-1.5 text-pink-500 hover:bg-pink-50 rounded-full transition shrink-0 fav-remove-btn" title="Quitar de favoritos">
           <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
         </button>
-      </div>
-    `).join('');
+      </div>`;
+    }).join('');
     list.querySelectorAll('.fav-item').forEach(item => {
       item.addEventListener('click', function(e) {
         if (e.target.closest('.fav-remove-btn')) return;

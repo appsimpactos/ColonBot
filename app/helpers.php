@@ -114,6 +114,21 @@ function waLink(string $phone, string $msg = ''): string
     return "https://wa.me/{$phone}" . ($msg ? "?text={$msg}" : '');
 }
 
+function getCategoryEmoji(string $icon): string
+{
+    $map = [
+        'utensils'      => '🍽️',
+        'hotel'         => '🏨',
+        'wine'          => '🍷',
+        'landmark'      => '🏛️',
+        'star'          => '⭐',
+        'waves'         => '🌊',
+        'shopping-bag'  => '🛍️',
+        'map-pin'       => '📍',
+    ];
+    return $map[$icon] ?? '📍';
+}
+
 function stars(float $rating): string
 {
     $full  = (int)floor($rating);
