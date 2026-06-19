@@ -140,21 +140,20 @@ const BOUNDARY_STYLE = {
   fillOpacity: 0.08,
 };
 
-// Overpass query: get all ways of the boundary relation for Colón municipality
-fetch('https://overpass-api.de/api/interpreter?data=[out:json];relation[boundary=administrative][admin_level=8][name="Colón"](area:area[boundary=administrative][admin_level=4][name="Querétaro"]);(._;>>;);out geom;')
+// Obtiene el límite municipal de Colón desde polygons.openstreetmap.fr (OpenStreetMap data)
+// Usa el relation ID conocido de Colón, Querétaro
+fetch('https://polygons.openstreetmap.fr/get_geojson.php?id=2671516&params=0')
   .then(r => r.json())
-  .then(data => {
-    if (!data.elements || !data.elements.length) { throw new Error('No data'); }
-    // Build a polygon from all way nodes ordered by relation members
-    const ways = data.elements.filter(el => el.type === 'way');
-    if (!ways.length) throw new Error('No ways');
-    // Collect all coordinates from all ways
-    const coords = ways.flatMap(way => {
-      if (!way.geometry) return [];
-      return way.geometry.map(g => [g.lat, g.lon]);
-    });
-    if (coords.length < 3) throw new Error('Not enough coordinates');
-    L.polygon(coords, BOUNDARY_STYLE).addTo(map);
+  .then(geojson => {
+    if (!geojson || !geojson.coordinates) { throw new Error('Sin geometría'); }
+    // El GeoJSON viene como Polygon o MultiPolygon en [lng, lat]
+    const ring = geojson.type === 'MultiPolygon'
+      ? geojson.coordinates[0][0]
+      : geojson.coordinates[0];
+    // Convertir [lng, lat] a [lat, lng] para Leaflet
+    const latlngs = ring.map(c => [c[1], c[0]]);
+    if (latlngs.length < 3) throw new Error('Muy pocos puntos');
+    L.polygon(latlngs, BOUNDARY_STYLE).addTo(map);
   })
   .catch(() => {});
 
