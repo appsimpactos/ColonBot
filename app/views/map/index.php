@@ -132,12 +132,21 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // ─── Límite municipal de Colón, Querétaro ──────────────────────────────
+// Estilo principal: línea sólida gruesa
 const BOUNDARY_STYLE = {
-  color: '#1D4ED8',
-  weight: 4,
-  opacity: 0.9,
-  fillColor: '#3B82F6',
-  fillOpacity: 0.08,
+  color: '#DC2626',     // Rojo intenso
+  weight: 6,
+  opacity: 1.0,
+  fillColor: '#DC2626',
+  fillOpacity: 0.04,
+};
+
+// Estilo secundario: borde exterior difuminado para efecto de "glow"
+const BOUNDARY_GLOW_STYLE = {
+  color: '#DC2626',
+  weight: 12,
+  opacity: 0.25,
+  fill: false,
 };
 
 // Obtiene el límite municipal de Colón desde polygons.openstreetmap.fr (OpenStreetMap data)
@@ -153,7 +162,9 @@ fetch('https://polygons.openstreetmap.fr/get_geojson.php?id=2671516&params=0')
     // Convertir [lng, lat] a [lat, lng] para Leaflet
     const latlngs = ring.map(c => [c[1], c[0]]);
     if (latlngs.length < 3) throw new Error('Muy pocos puntos');
-    L.polygon(latlngs, BOUNDARY_STYLE).addTo(map);
+    const boundary = L.polygon(latlngs, BOUNDARY_STYLE).addTo(map);
+    // Capa de resplandor exterior (se dibuja debajo)
+    L.polygon(latlngs, BOUNDARY_GLOW_STYLE).addTo(map).bringToBack();
   })
   .catch(() => {});
 
