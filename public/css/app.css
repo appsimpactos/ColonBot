@@ -26,3 +26,11 @@
 
 /* ─── Map height fix ────────────────────────────────────────── */
 #map { min-height: 400px; }
+
+/* ─── Límite municipal de Colón ──────────────────────────────── */
+.colon-boundary-layer {
+  z-index: 10000 !important;
+}
+.colon-boundary-glow {
+  z-index: 9999 !important;
+}
