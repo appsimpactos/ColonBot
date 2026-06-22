@@ -41,6 +41,43 @@ require APP_PATH . '/views/layout/head.php';
         <?php endforeach; ?>
       </div>
     </div>
+
+    <!-- ISOTIPOS Filter -->
+    <div class="max-w-7xl mx-auto flex flex-wrap gap-2 items-center mt-3">
+      <span class="text-xs font-semibold text-gray-500 mr-1">ISOTIPOS:</span>
+      <button onclick="filterIsotipo('restaurante')" data-isotipo="restaurante"
+        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
+        🍽️ Restaurante
+      </button>
+      <button onclick="filterIsotipo('lugares_historicos')" data-isotipo="lugares_historicos"
+        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
+        🏛️ Lugares históricos
+      </button>
+      <button onclick="filterIsotipo('viniedo')" data-isotipo="viniedo"
+        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
+        🍷 Viñedo
+      </button>
+      <button onclick="filterIsotipo('hotel')" data-isotipo="hotel"
+        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
+        🏨 Hotel
+      </button>
+      <button onclick="filterIsotipo('paisaje_cerro')" data-isotipo="paisaje_cerro"
+        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
+        ⭐ Paisaje/cerro
+      </button>
+      <button onclick="filterIsotipo('lago_presa')" data-isotipo="lago_presa"
+        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
+        🌊 Lago/presa
+      </button>
+      <button onclick="filterIsotipo('lugar_compras')" data-isotipo="lugar_compras"
+        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
+        🛍️ Lugar de compras
+      </button>
+      <button onclick="filterIsotipo('indeterminado')" data-isotipo="indeterminado"
+        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
+        📍 Indeterminado
+      </button>
+    </div>
   </div>
 
   <!-- Map + Sidebar layout -->
@@ -208,6 +245,7 @@ let markers = [];
 let allPois = [];
 let currentCat = PRELOAD_CAT;
 let currentSearch = '';
+let currentIsotipo = '';
 
 function createIcon(color, iconName) {
   const emoji = iconToEmoji(iconName);
@@ -361,6 +399,35 @@ function filterCat(cat) {
   history.pushState({ cat }, '', url);
   setActiveCatButton(cat);
   loadPOIs();
+}
+
+function setActiveIsotipoButton(isotipo) {
+  document.querySelectorAll('.isotipo-btn').forEach(b => {
+    const active = b.dataset.isotipo === isotipo;
+    b.classList.toggle('bg-blue-600', active);
+    b.classList.toggle('text-white', active);
+    b.classList.toggle('bg-gray-100', !active);
+    b.classList.toggle('text-gray-700', !active);
+  });
+}
+
+function filterIsotipo(isotipo) {
+  currentIsotipo = isotipo;
+  setActiveIsotipoButton(isotipo);
+  // Filter POIs client-side based on the isotipo
+  const filtered = currentIsotipo
+    ? allPois.filter(poi => poi.isotipo === currentIsotipo)
+    : allPois;
+  // Clear existing markers
+  markers.forEach(m => map.removeLayer(m));
+  markers = [];
+  filtered.forEach(poi => {
+    if (!poi.lat || !poi.lng) return;
+    const m = L.marker([poi.lat, poi.lng], { icon: createIcon(poi.category_color || '#3B82F6', poi.category_icon) });
+    m.addTo(map);
+    m.on('click', () => showPOI(poi));
+    markers.push(m);
+  });
 }
 
 function doSearch() {
