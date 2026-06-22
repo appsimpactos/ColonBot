@@ -89,15 +89,15 @@ require APP_PATH . '/views/layout/head.php';
           <?php endforeach; ?>
         </div>
         <div class="mt-4 pt-4 border-t border-gray-100">
-          <p class="text-sm text-gray-600">
-            Más información en: <a href="<?= url('mapa/' . (int)$business['id']) ?>" class="text-blue-600 hover:underline font-medium"><?= url('mapa/' . (int)$business['id']) ?></a>
+          <p class="text-sm text-blue-600 font-medium">
+            Más información en: <?= url('mapa/' . (int)$business['id']) ?>
           </p>
         </div>
       </div>
       <?php else: ?>
       <div class="bg-white rounded-2xl shadow-sm p-6">
-        <p class="text-sm text-gray-600">
-          Más información en: <a href="<?= url('mapa/' . (int)$business['id']) ?>" class="text-blue-600 hover:underline font-medium"><?= url('mapa/' . (int)$business['id']) ?></a>
+        <p class="text-sm text-blue-600 font-medium">
+          Más información en: <?= url('mapa/' . (int)$business['id']) ?>
         </p>
       </div>
       <?php endif; ?>
