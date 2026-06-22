@@ -133,7 +133,7 @@ class ChatbotController extends Controller
         $businesses = $this->businesses->withFilters(['category' => $catSlug]);
 
         if (empty($businesses)) {
-            return ['type' => 'text', 'text' => ['body' => "No encontré resultados para esa categoría. Escribe *menú* para regresar."]];
+            return ['type' => 'text', 'text' => ['body' => "No encontré resultados para esa categoría.\n\n🗺️ Explora el mapa interactivo: " . url('mapa') . "\n\nEscribe *menú* para regresar."]];
         }
 
         $lines = ["*{$title}*\n"];
@@ -141,6 +141,7 @@ class ChatbotController extends Controller
             $wa = $b['whatsapp'] ? "\n   ↪ " . waLink($b['whatsapp'], 'Hola, vi tu perfil en Colón Turismo') : '';
             $lines[] = "📍 *{$b['name']}*\n   {$b['address']}{$wa}";
         }
+        $lines[] = "\n🗺️ Explora el mapa interactivo: " . url('mapa');
         $lines[] = "\nEscribe *menú* para regresar al inicio.";
 
         return ['type' => 'text', 'text' => ['body' => implode("\n\n", $lines)]];
