@@ -42,43 +42,6 @@ require APP_PATH . '/views/layout/head.php';
       </div>
     </div>
 
-    <!-- ISOTIPOS Filter -->
-    <div class="max-w-7xl mx-auto flex flex-wrap gap-2 items-center mt-3">
-      <span class="text-xs font-semibold text-gray-500 mr-1">ISOTIPOS:</span>
-      <button onclick="filterIsotipo('restaurante')" data-isotipo="restaurante"
-        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
-        🍽️ Restaurante
-      </button>
-      <button onclick="filterIsotipo('lugares_historicos')" data-isotipo="lugares_historicos"
-        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
-        🏛️ Lugares históricos
-      </button>
-      <button onclick="filterIsotipo('viniedo')" data-isotipo="viniedo"
-        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
-        🍷 Viñedo
-      </button>
-      <button onclick="filterIsotipo('hotel')" data-isotipo="hotel"
-        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
-        🏨 Hotel
-      </button>
-      <button onclick="filterIsotipo('paisaje_cerro')" data-isotipo="paisaje_cerro"
-        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
-        ⭐ Paisaje/cerro
-      </button>
-      <button onclick="filterIsotipo('lago_presa')" data-isotipo="lago_presa"
-        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
-        🌊 Lago/presa
-      </button>
-      <button onclick="filterIsotipo('lugar_compras')" data-isotipo="lugar_compras"
-        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
-        🛍️ Lugar de compras
-      </button>
-      <button onclick="filterIsotipo('indeterminado')" data-isotipo="indeterminado"
-        class="isotipo-btn text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition font-medium">
-        📍 Indeterminado
-      </button>
-    </div>
-
     <!-- Tipo de viaje Filter -->
     <div class="max-w-7xl mx-auto flex flex-wrap gap-2 items-center mt-2">
       <span class="text-xs font-semibold text-gray-500 mr-1">Tipo de viaje:</span>
@@ -185,10 +148,24 @@ const ICON_MAP = {
   'default':       '📍',
 };
 
+const ISOTIPO_ICON_MAP = {
+  'restaurante':       '🍽️',
+  'lugares_historicos': '🏛️',
+  'viniedo':           '🍷',
+  'hotel':             '🏨',
+  'paisaje_cerro':     '⭐',
+  'lago_presa':        '🌊',
+  'lugar_compras':     '🛍️',
+  'indeterminado':     '📍',
+};
+
 function iconToEmoji(iconName) {
   return ICON_MAP[iconName] || ICON_MAP['default'];
 }
 
+function isotipoToEmoji(isotipo) {
+  return ISOTIPO_ICON_MAP[isotipo] || ICON_MAP['default'];
+}
 
 // Initialise map
 const map = L.map('map', { zoomControl: true }).setView([MAP_LAT, MAP_LNG], MAP_ZOOM);
@@ -277,8 +254,7 @@ let currentSearch = '';
 let currentIsotipo = '';
 let currentTripType = '';
 
-function createIcon(color, iconName) {
-  const emoji = iconToEmoji(iconName);
+function createIcon(color, emoji) {
   return L.divIcon({
     className: '',
     html: `<div style="background:${color};width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center">
@@ -298,7 +274,8 @@ function loadPOIs() {
       allPois = pois;
       pois.forEach(poi => {
         if (!poi.lat || !poi.lng) return;
-        const m = L.marker([poi.lat, poi.lng], { icon: createIcon(poi.category_color || '#3B82F6', poi.category_icon) });
+        const poiEmoji = isotipoToEmoji(poi.isotipo);
+        const m = L.marker([poi.lat, poi.lng], { icon: createIcon(poi.category_color || '#3B82F6', poiEmoji) });
         m.addTo(map);
         m.on('click', () => showPOI(poi));
         markers.push(m);
@@ -464,7 +441,8 @@ function filterTripType(tripType) {
   markers = [];
   filtered.forEach(poi => {
     if (!poi.lat || !poi.lng) return;
-    const m = L.marker([poi.lat, poi.lng], { icon: createIcon(poi.category_color || '#3B82F6', poi.category_icon) });
+    const poiEmoji = isotipoToEmoji(poi.isotipo);
+    const m = L.marker([poi.lat, poi.lng], { icon: createIcon(poi.category_color || '#3B82F6', poiEmoji) });
     m.addTo(map);
     m.on('click', () => showPOI(poi));
     markers.push(m);
@@ -483,7 +461,8 @@ function filterIsotipo(isotipo) {
   markers = [];
   filtered.forEach(poi => {
     if (!poi.lat || !poi.lng) return;
-    const m = L.marker([poi.lat, poi.lng], { icon: createIcon(poi.category_color || '#3B82F6', poi.category_icon) });
+    const poiEmoji = isotipoToEmoji(poi.isotipo);
+    const m = L.marker([poi.lat, poi.lng], { icon: createIcon(poi.category_color || '#3B82F6', poiEmoji) });
     m.addTo(map);
     m.on('click', () => showPOI(poi));
     markers.push(m);
