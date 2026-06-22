@@ -138,14 +138,10 @@ class ChatbotController extends Controller
 
         $lines = ["*{$title}*\n"];
         foreach (array_slice($businesses, 0, 5) as $b) {
-            $mapLink = url('lugar/' . $b['slug']);
-            $waLink  = $b['whatsapp'] ? "https://wa.me/" . preg_replace('/\D/', '', $b['whatsapp']) : '';
+            $mapLink = url('mapa/' . $b['id']);
             $dir     = $b['address'] ? $b['address'] : 'Sin dirección';
 
-            $businessLines = "📍 *{$b['name']}*\n   {$dir}\n   🗺️ Ver en mapa: {$mapLink}";
-            if ($waLink) {
-                $businessLines .= "\n   💬 WhatsApp: {$waLink}";
-            }
+            $businessLines = "📍 *{$b['name']}*\n   {$dir}\n   Más información en: {$mapLink}";
             $lines[] = $businessLines;
         }
         $lines[] = "\nEscribe *menú* para regresar al inicio.";
