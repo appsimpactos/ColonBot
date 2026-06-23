@@ -30,7 +30,66 @@
 /* ─── Límite municipal de Colón ──────────────────────────────── */
 .colon-boundary-layer {
   z-index: 10000 !important;
+  /* Pulsing border animation for the boundary */
+  animation: boundaryPulse 2s ease-in-out infinite !important;
 }
 .colon-boundary-glow {
   z-index: 9999 !important;
+}
+.colon-boundary-dash {
+  z-index: 10001 !important;
+  animation: dashRotate 3s linear infinite !important;
+}
+
+/* Municipality name label on map */
+.colon-boundary-label {
+  z-index: 10002 !important;
+  background: rgba(220, 38, 38, 0.9);
+  color: white;
+  font-weight: 800;
+  font-size: 18px;
+  padding: 10px 22px;
+  border-radius: 30px;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 30px rgba(220, 38, 38, 0.6), 0 4px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.colon-boundary-label small {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  opacity: 0.9;
+  letter-spacing: 0;
+  margin-top: 2px;
+}
+
+/* Fill overlay for the municipality area */
+.colon-boundary-fill {
+  z-index: 9998 !important;
+  pointer-events: none;
+}
+
+/* Pulsing animation for the boundary ring */
+@keyframes boundaryPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+/* Dashed line rotation animation */
+@keyframes dashRotate {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -40;
+  }
 }

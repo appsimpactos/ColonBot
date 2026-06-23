@@ -176,24 +176,62 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // ─── Límite municipal de Colón, Querétaro ──────────────────────────────
-// Estilo principal: línea sólida gruesa y llamativa
-const BOUNDARY_STYLE = {
+// Colores vibrantes para destacar el municipio
+const BOUNDARY_COLOR = '#DC2626';      // Rojo intenso
+const BOUNDARY_COLOR_ALT = '#FF6B00';  // Naranja para capa extra
+const BOUNDARY_GLOW_COLOR = '#FFAAAA'; // Rosa claro para glow exterior
+
+// Capa 1 - Base: relleno semitransparente del área municipal
+const BOUNDARY_FILL_STYLE = {
   color: '#DC2626',
-  weight: 8,
-  opacity: 1.0,
+  weight: 2,
+  opacity: 0.3,
   fillColor: '#DC2626',
-  fillOpacity: 0.06,
-  className: 'colon-boundary-layer',
+  fillOpacity: 0.08,
+  className: 'colon-boundary-fill',
 };
 
-// Estilo secundario: borde exterior difuminado para efecto de "glow"
+// Capa 2 - Glow exterior amplio y suave
 const BOUNDARY_GLOW_STYLE = {
-  color: '#DC2626',
-  weight: 18,
-  opacity: 0.20,
+  color: BOUNDARY_GLOW_COLOR,
+  weight: 30,
+  opacity: 0.30,
   fill: false,
   className: 'colon-boundary-glow',
 };
+
+// Capa 3 - Línea sólida principal gruesa
+const BOUNDARY_STYLE = {
+  color: BOUNDARY_COLOR,
+  weight: 10,
+  opacity: 1.0,
+  fillColor: BOUNDARY_COLOR,
+  fillOpacity: 0.05,
+  className: 'colon-boundary-layer',
+};
+
+// Capa 4 - Línea discontinua animada encima del borde principal
+const BOUNDARY_DASH_STYLE = {
+  color: '#FFFFFF',
+  weight: 4,
+  opacity: 0.9,
+  fill: false,
+  dashArray: '10, 10',
+  className: 'colon-boundary-dash',
+};
+
+// Capa 5 - Línea interior delgada para dar más énfasis
+const BOUNDARY_INNER_STYLE = {
+  color: BOUNDARY_COLOR_ALT,
+  weight: 14,
+  opacity: 0.15,
+  fill: false,
+  className: 'colon-boundary-glow',
+};
+
+// Centro geográfico aproximado de Colón para la etiqueta
+const COLON_CENTER_LAT = 20.786;
+const COLON_CENTER_LNG = -100.050;
 
 /**
  * Dibuja el límite municipal en el mapa a partir de un arreglo de coordenadas [lat, lng].
@@ -203,10 +241,39 @@ function drawBoundary(latlngs) {
     console.error('Coordenadas insuficientes para dibujar el límite');
     return;
   }
-  // Capa de resplandor exterior (se dibuja debajo)
+
+  // --- Capa 1: Relleno del área (base) ---
+  L.polygon(latlngs, BOUNDARY_FILL_STYLE).addTo(map).bringToBack();
+
+  // --- Capa 2: Glow exterior amplio ---
   L.polygon(latlngs, BOUNDARY_GLOW_STYLE).addTo(map).bringToBack();
-  // Capa principal (se dibuja encima)
-  L.polygon(latlngs, BOUNDARY_STYLE).addTo(map);
+
+  // --- Capa 3: Línea principal sólida ---
+  const mainBoundary = L.polygon(latlngs, BOUNDARY_STYLE).addTo(map);
+
+  // --- Capa 4: Línea discontinua animada encima ---
+  L.polygon(latlngs, BOUNDARY_DASH_STYLE).addTo(map);
+
+  // --- Capa 5: Línea interior de énfasis ---
+  L.polygon(latlngs, BOUNDARY_INNER_STYLE).addTo(map).bringToBack();
+
+  // --- Etiqueta con el nombre del municipio ---
+  const labelIcon = L.divIcon({
+    className: 'colon-boundary-label',
+    html: '<div>MUNICIPIO DE COLÓN</div><small>QUERÉTARO, MÉXICO</small>',
+    iconSize: [260, 70],
+    iconAnchor: [130, 35],
+  });
+  L.marker([COLON_CENTER_LAT, COLON_CENTER_LNG], {
+    icon: labelIcon,
+    interactive: false,
+    keyboard: false,
+  }).addTo(map);
+
+  // Ajustar el mapa para que el municipio quede centrado con zoom adecuado
+  const bounds = mainBoundary.getBounds();
+  map.fitBounds(bounds.pad(0.1));
+
   console.log('✅ Límite municipal de Colón dibujado correctamente');
 }
 
