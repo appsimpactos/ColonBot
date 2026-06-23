@@ -113,9 +113,9 @@ require APP_PATH . '/views/layout/head.php';
           });
           </script>
 
-          <!-- Tipo de Isotipo -->
+          <!-- Tipo de lugar -->
           <div class="sm:col-span-2">
-            <label class="label">Tipo de Isotipo <span class="text-xs text-gray-400">(selecciona uno)</span></label>
+            <label class="label">Tipo de lugar <span class="text-xs text-gray-400">(selecciona uno)</span></label>
             <div class="flex flex-wrap gap-3 mt-1">
               <?php $isotipoOptions = ['restaurante'=>'🍽️ Restaurante', 'lugares_historicos'=>'🏛️ Lugares hist&oacute;ricos', 'viniedo'=>'🍷 Vi&ntilde;edo', 'hotel'=>'🏨 Hotel', 'paisaje_cerro'=>'⭐ Paisaje/cerro', 'lago_presa'=>'🌊 Lago/presa', 'lugar_compras'=>'🛍️ Lugar de compras', 'indeterminado'=>'📍 Indeterminado']; ?>
               <?php foreach ($isotipoOptions as $val => $label): ?>

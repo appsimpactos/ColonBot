@@ -63,13 +63,14 @@ class MapController extends Controller
         $this->businesses->incrementVisit($business['id']);
         $this->analytics->track('map_view', $business['id']);
 
-        $images   = $this->businesses->images($business['id']);
+        $images    = $this->businesses->images($business['id']);
         $amenities = $this->businesses->amenities($business['id']);
         $services  = $this->businesses->services($business['id']);
         $products  = $this->businesses->products($business['id']);
         $events    = $this->businesses->allEvents($business['id']);
+        $tripTypes = array_column($this->businesses->tripTypes((int)$business['id']), 'trip_type');
 
-        $this->view('map.detail', compact('business', 'images', 'amenities', 'services', 'products', 'events'));
+        $this->view('map.detail', compact('business', 'images', 'amenities', 'services', 'products', 'events', 'tripTypes'));
     }
 
     public function contact(string $slug): void

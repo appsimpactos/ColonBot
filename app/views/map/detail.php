@@ -119,6 +119,53 @@ require APP_PATH . '/views/layout/head.php';
       </div>
       <?php endif; ?>
 
+      <!-- Tipo de lugar (isotipo) -->
+      <?php if (!empty($business['isotipo'])): ?>
+      <div class="bg-white rounded-2xl shadow-sm p-6">
+        <h2 class="font-semibold text-gray-900 mb-3">📍 Tipo de lugar</h2>
+        <div class="flex flex-wrap gap-2">
+          <?php
+          $isotipoMap = [
+            'restaurante'       => '🍽️ Restaurante',
+            'lugares_historicos' => '🏛️ Lugares históricos',
+            'viniedo'           => '🍷 Viñedo',
+            'hotel'             => '🏨 Hotel',
+            'paisaje_cerro'     => '⭐ Paisaje/cerro',
+            'lago_presa'        => '🌊 Lago/presa',
+            'lugar_compras'     => '🛍️ Lugar de compras',
+            'indeterminado'     => '📍 Indeterminado',
+          ];
+          $isotipoLabel = $isotipoMap[$business['isotipo']] ?? e($business['isotipo']);
+          ?>
+          <span class="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 bg-orange-50 text-orange-700 rounded-full border border-orange-200 font-medium">
+            <?= $isotipoLabel ?>
+          </span>
+        </div>
+        <?php if (!empty($tripTypes)): ?>
+        <div class="mt-3">
+          <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">🎯 Tipo de viaje</h3>
+          <div class="flex flex-wrap gap-2">
+            <?php
+            $tripTypeMap = [
+              'familiar'       => '👨‍👩‍👧‍👦 Familiar',
+              'amigos'         => '🧑‍🤝‍🧑 Amigos',
+              'pareja'         => '💑 Pareja',
+              'petfriendly'    => '🐾 Petfriendly',
+              'adultos_mayores' => '👴 Adultos Mayores',
+            ];
+            foreach ($tripTypes as $tt):
+              $ttLabel = $tripTypeMap[$tt] ?? e($tt);
+            ?>
+            <span class="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 bg-purple-50 text-purple-700 rounded-full border border-purple-200 font-medium">
+              <?= $ttLabel ?>
+            </span>
+            <?php endforeach; ?>
+          </div>
+        </div>
+        <?php endif; ?>
+      </div>
+      <?php endif; ?>
+
       <!-- Servicios -->
       <?php if ($services): ?>
       <div id="servicios" class="bg-white rounded-2xl shadow-sm p-6">

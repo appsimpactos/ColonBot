@@ -366,8 +366,44 @@ function showPOI(poi) {
     body: `event=map_view&business_id=${poi.id}`,
   });
 
+  // Trip type labels with emojis
+  const TRIP_TYPE_MAP = {
+    'familiar':       '👨‍👩‍👧‍👦 Familiar',
+    'amigos':         '🧑‍🤝‍🧑 Amigos',
+    'pareja':         '💑 Pareja',
+    'petfriendly':    '🐾 Petfriendly',
+    'adultos_mayores':'👴 Adultos Mayores',
+  };
+
+  // Isotipo labels with emojis
+  const ISOTIPO_LABEL_MAP = {
+    'restaurante':       '🍽️ Restaurante',
+    'lugares_historicos':'🏛️ Lugares históricos',
+    'viniedo':           '🍷 Viñedo',
+    'hotel':             '🏨 Hotel',
+    'paisaje_cerro':     '⭐ Paisaje/cerro',
+    'lago_presa':        '🌊 Lago/presa',
+    'lugar_compras':     '🛍️ Lugar de compras',
+    'indeterminado':     '📍 Indeterminado',
+  };
+
   const isFav = isFavorito(poi.id);
   const categoryEmoji = iconToEmoji(poi.category_icon);
+
+  // Build trip type badges HTML
+  const tripTypeBadges = (poi.trip_types && poi.trip_types.length > 0)
+    ? poi.trip_types.map(tt => {
+        const label = TRIP_TYPE_MAP[tt] || tt;
+        return `<span class="inline-block text-xs px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200 font-medium">${label}</span>`;
+      }).join(' ')
+    : '';
+
+  // Build isotipo badge HTML
+  const isotipoLabel = ISOTIPO_LABEL_MAP[poi.isotipo] || poi.isotipo || '';
+  const isotipoBadge = isotipoLabel
+    ? `<span class="inline-block text-xs px-2 py-0.5 rounded-full bg-orange-50 text-orange-700 border border-orange-200 font-medium">${isotipoLabel}</span>`
+    : '';
+
   const html = `
     <img src="${poi.cover}" class="w-full h-40 object-cover rounded-xl mb-3" onerror="this.src='/assets/img/placeholder.svg'">
     <div class="flex items-start justify-between gap-2 mb-2">
@@ -383,10 +419,12 @@ function showPOI(poi) {
         </button>
       </div>
     </div>
-    <div class="flex items-center gap-1 text-yellow-400 text-sm mb-4">
+    <div class="flex items-center gap-1 text-yellow-400 text-sm mb-3">
       ${'★'.repeat(Math.round(poi.rating))}${'☆'.repeat(5-Math.round(poi.rating))}
       <span class="text-gray-500 ml-1">${poi.rating.toFixed(1)}</span>
     </div>
+    ${isotipoBadge ? `<div class="flex items-center gap-2 mb-3">${isotipoBadge}</div>` : ''}
+    ${tripTypeBadges ? `<div class="flex flex-wrap gap-1 mb-3">${tripTypeBadges}</div>` : ''}
     <div class="grid grid-cols-2 gap-2">
       <a href="${poi.url}" class="col-span-2 flex items-center justify-center gap-2 bg-blue-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-700 transition">
         Ver detalle
