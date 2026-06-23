@@ -183,14 +183,15 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // ─── Límite municipal de Colón, Querétaro ──────────────────────────────
 // Estilo sutil: solo el contorno del municipio, sin rellenos ni decoraciones llamativas
-const BOUNDARY_COLOR = '#000000';      // Negro
+const BOUNDARY_COLOR = '#000000';      // Línea negra
+const BOUNDARY_FILL_COLOR = '#DC2626'; // Relleno rojo (se mantiene igual)
 
 // Capa única - Línea de contorno simple y delgada
 const BOUNDARY_STYLE = {
   color: BOUNDARY_COLOR,
   weight: 2,
   opacity: 0.55,
-  fillColor: BOUNDARY_COLOR,
+  fillColor: BOUNDARY_FILL_COLOR,
   fillOpacity: 0.04,
 };
 
