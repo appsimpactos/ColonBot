@@ -171,10 +171,18 @@ function isotipoToEmoji(isotipo) {
 // Initialise map
 const map = L.map('map', { zoomControl: true }).setView([MAP_LAT, MAP_LNG], MAP_ZOOM);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+// Usar CartoDB Positron que tiene límites administrativos SUTILES
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light/{z}/{x}/{y}{r}.png', {
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
   maxZoom: 18,
+  subdomains: 'abcd',
 }).addTo(map);
+
+// Aplicar filtro CSS oscuro suave al mapa base para que el límite rojo destaque
+const mapContainer = document.getElementById('map');
+if (mapContainer) {
+  mapContainer.style.filter = 'contrast(0.95) saturate(1.05)';
+}
 
 // ─── Límite municipal de Colón, Querétaro ──────────────────────────────
 // Colores súper vibrantes para destacar el municipio al máximo
@@ -185,59 +193,59 @@ const BOUNDARY_DASH_COLOR  = '#FFFFFF';      // Blanco puro para la línea disco
 const BOUNDARY_ACCENT      = '#FFD700';      // Dorado para capa de acento
 const BOUNDARY_FILL_COLOR  = '#DC2626';      // Color de relleno
 
-// Capa 1 - Relleno del área municipal (más notorio)
+// Capa 1 - Relleno del área municipal (más notorio) - AUMENTADO
 const BOUNDARY_FILL_STYLE = {
   color: BOUNDARY_FILL_COLOR,
   weight: 2,
-  opacity: 0.4,
+  opacity: 0.5,
   fillColor: BOUNDARY_FILL_COLOR,
-  fillOpacity: 0.12,
+  fillOpacity: 0.18,
   className: 'colon-boundary-fill',
 };
 
-// Capa 2 - Glow exterior MEGA amplio (efecto de resplandor enorme)
+// Capa 2 - Glow exterior MEGA amplio (efecto de resplandor enorme) - MEJORADO
 const BOUNDARY_GLOW_STYLE = {
   color: BOUNDARY_GLOW_COLOR,
-  weight: 50,
-  opacity: 0.25,
+  weight: 80,
+  opacity: 0.35,
   fill: false,
   className: 'colon-boundary-glow',
 };
 
-// Capa 3 - Línea sólida principal MUY gruesa y visible
+// Capa 3 - Línea sólida principal MUY gruesa y visible - AUMENTADA
 const BOUNDARY_STYLE = {
   color: BOUNDARY_COLOR,
-  weight: 12,
+  weight: 16,
   opacity: 1.0,
   fillColor: BOUNDARY_COLOR,
-  fillOpacity: 0.06,
+  fillOpacity: 0.08,
   className: 'colon-boundary-layer',
 };
 
-// Capa 4 - Línea discontinua animada encima del borde principal
+// Capa 4 - Línea discontinua animada encima del borde principal - MEJORADA
 const BOUNDARY_DASH_STYLE = {
   color: BOUNDARY_DASH_COLOR,
-  weight: 5,
-  opacity: 1.0,
+  weight: 7,
+  opacity: 0.95,
   fill: false,
-  dashArray: '12, 12',
+  dashArray: '10, 8',
   className: 'colon-boundary-dash',
 };
 
-// Capa 5 - Línea de acento dorado para dar más énfasis
+// Capa 5 - Línea de acento dorado para dar más énfasis - MEJORADA
 const BOUNDARY_INNER_STYLE = {
   color: BOUNDARY_ACCENT,
-  weight: 16,
-  opacity: 0.20,
+  weight: 20,
+  opacity: 0.30,
   fill: false,
   className: 'colon-boundary-glow',
 };
 
-// Capa 6 - Sombra exterior adicional para efecto 3D
+// Capa 6 - Sombra exterior adicional para efecto 3D - MEJORADA
 const BOUNDARY_SHADOW_STYLE = {
   color: '#000000',
-  weight: 60,
-  opacity: 0.10,
+  weight: 100,
+  opacity: 0.15,
   fill: false,
   className: 'colon-boundary-glow',
 };
