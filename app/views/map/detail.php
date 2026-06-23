@@ -133,6 +133,11 @@ require APP_PATH . '/views/layout/head.php';
             'paisaje_cerro'     => '⭐ Paisaje/cerro',
             'lago_presa'        => '🌊 Lago/presa',
             'lugar_compras'     => '🛍️ Lugar de compras',
+            'pena_bernal'       => '🏔️ Peña de Bernal',
+            'aeropuerto'        => '✈️ Aeropuerto',
+            'zoologico_wameru'  => '🦁 Zoológico Wamerú',
+            'arcos_queretaro'   => '🌉 Los Arcos de Querétaro',
+            'estacion_tren'     => '🚂 Estación del tren México-Querétaro',
           ];
           $isotipoLabel = $isotipoMap[$business['isotipo']] ?? e($business['isotipo']);
           ?>

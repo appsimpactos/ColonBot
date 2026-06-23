@@ -158,6 +158,11 @@ const ISOTIPO_ICON_MAP = {
   'paisaje_cerro':     '⭐',
   'lago_presa':        '🌊',
   'lugar_compras':     '🛍️',
+  'pena_bernal':       '🏔️',
+  'aeropuerto':        '✈️',
+  'zoologico_wameru':  '🦁',
+  'arcos_queretaro':   '🌉',
+  'estacion_tren':     '🚂',
 };
 
 function iconToEmoji(iconName) {
@@ -178,7 +183,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // ─── Límite municipal de Colón, Querétaro ──────────────────────────────
 // Estilo sutil: solo el contorno del municipio, sin rellenos ni decoraciones llamativas
-const BOUNDARY_COLOR = '#DC2626';      // Rojo suave
+const BOUNDARY_COLOR = '#000000';      // Negro
 
 // Capa única - Línea de contorno simple y delgada
 const BOUNDARY_STYLE = {
@@ -343,6 +348,11 @@ function showPOI(poi) {
     'paisaje_cerro':     '⭐ Paisaje/cerro',
     'lago_presa':        '🌊 Lago/presa',
     'lugar_compras':     '🛍️ Lugar de compras',
+    'pena_bernal':       '🏔️ Peña de Bernal',
+    'aeropuerto':        '✈️ Aeropuerto',
+    'zoologico_wameru':  '🦁 Zoológico Wamerú',
+    'arcos_queretaro':   '🌉 Los Arcos de Querétaro',
+    'estacion_tren':     '🚂 Estación del tren México-Querétaro',
   };
 
   const isFav = isFavorito(poi.id);
