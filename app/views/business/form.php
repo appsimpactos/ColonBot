@@ -117,7 +117,7 @@ require APP_PATH . '/views/layout/head.php';
           <div class="sm:col-span-2">
             <label class="label">Tipo de lugar <span class="text-xs text-gray-400">(selecciona uno)</span></label>
             <div class="flex flex-wrap gap-3 mt-1">
-              <?php $isotipoOptions = ['restaurante'=>'🍽️ Restaurante', 'lugares_historicos'=>'🏛️ Lugares hist&oacute;ricos', 'viniedo'=>'🍷 Vi&ntilde;edo', 'hotel'=>'🏨 Hotel', 'paisaje_cerro'=>'⭐ Paisaje/cerro', 'lago_presa'=>'🌊 Lago/presa', 'lugar_compras'=>'🛍️ Lugar de compras', 'indeterminado'=>'📍 Indeterminado']; ?>
+              <?php $isotipoOptions = ['restaurante'=>'🍽️ Restaurante', 'lugares_historicos'=>'🏛️ Lugares hist&oacute;ricos', 'viniedo'=>'🍷 Vi&ntilde;edo', 'hotel'=>'🏨 Hotel', 'paisaje_cerro'=>'⭐ Paisaje/cerro', 'lago_presa'=>'🌊 Lago/presa', 'lugar_compras'=>'🛍️ Lugar de compras']; ?>
               <?php foreach ($isotipoOptions as $val => $label): ?>
               <label class="flex items-center gap-2 cursor-pointer select-none">
                 <input type="radio" name="isotipo" value="<?= $val ?>"

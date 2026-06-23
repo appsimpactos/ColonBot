@@ -158,7 +158,6 @@ const ISOTIPO_ICON_MAP = {
   'paisaje_cerro':     '⭐',
   'lago_presa':        '🌊',
   'lugar_compras':     '🛍️',
-  'indeterminado':     '📍',
 };
 
 function iconToEmoji(iconName) {
@@ -178,55 +177,67 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // ─── Límite municipal de Colón, Querétaro ──────────────────────────────
-// Colores vibrantes para destacar el municipio
-const BOUNDARY_COLOR = '#DC2626';      // Rojo intenso
-const BOUNDARY_COLOR_ALT = '#FF6B00';  // Naranja para capa extra
-const BOUNDARY_GLOW_COLOR = '#FFAAAA'; // Rosa claro para glow exterior
+// Colores súper vibrantes para destacar el municipio al máximo
+const BOUNDARY_COLOR       = '#DC2626';      // Rojo intenso
+const BOUNDARY_COLOR_ALT   = '#FF6B00';      // Naranja vibrante
+const BOUNDARY_GLOW_COLOR  = '#FF6B6B';      // Rojo claro para glow exterior
+const BOUNDARY_DASH_COLOR  = '#FFFFFF';      // Blanco puro para la línea discontinua
+const BOUNDARY_ACCENT      = '#FFD700';      // Dorado para capa de acento
+const BOUNDARY_FILL_COLOR  = '#DC2626';      // Color de relleno
 
-// Capa 1 - Base: relleno semitransparente del área municipal
+// Capa 1 - Relleno del área municipal (más notorio)
 const BOUNDARY_FILL_STYLE = {
-  color: '#DC2626',
+  color: BOUNDARY_FILL_COLOR,
   weight: 2,
-  opacity: 0.3,
-  fillColor: '#DC2626',
-  fillOpacity: 0.08,
+  opacity: 0.4,
+  fillColor: BOUNDARY_FILL_COLOR,
+  fillOpacity: 0.12,
   className: 'colon-boundary-fill',
 };
 
-// Capa 2 - Glow exterior amplio y suave
+// Capa 2 - Glow exterior MEGA amplio (efecto de resplandor enorme)
 const BOUNDARY_GLOW_STYLE = {
   color: BOUNDARY_GLOW_COLOR,
-  weight: 30,
-  opacity: 0.30,
+  weight: 50,
+  opacity: 0.25,
   fill: false,
   className: 'colon-boundary-glow',
 };
 
-// Capa 3 - Línea sólida principal gruesa
+// Capa 3 - Línea sólida principal MUY gruesa y visible
 const BOUNDARY_STYLE = {
   color: BOUNDARY_COLOR,
-  weight: 10,
+  weight: 12,
   opacity: 1.0,
   fillColor: BOUNDARY_COLOR,
-  fillOpacity: 0.05,
+  fillOpacity: 0.06,
   className: 'colon-boundary-layer',
 };
 
 // Capa 4 - Línea discontinua animada encima del borde principal
 const BOUNDARY_DASH_STYLE = {
-  color: '#FFFFFF',
-  weight: 4,
-  opacity: 0.9,
+  color: BOUNDARY_DASH_COLOR,
+  weight: 5,
+  opacity: 1.0,
   fill: false,
-  dashArray: '10, 10',
+  dashArray: '12, 12',
   className: 'colon-boundary-dash',
 };
 
-// Capa 5 - Línea interior delgada para dar más énfasis
+// Capa 5 - Línea de acento dorado para dar más énfasis
 const BOUNDARY_INNER_STYLE = {
-  color: BOUNDARY_COLOR_ALT,
-  weight: 14,
-  opacity: 0.15,
+  color: BOUNDARY_ACCENT,
+  weight: 16,
+  opacity: 0.20,
+  fill: false,
+  className: 'colon-boundary-glow',
+};
+
+// Capa 6 - Sombra exterior adicional para efecto 3D
+const BOUNDARY_SHADOW_STYLE = {
+  color: '#000000',
+  weight: 60,
+  opacity: 0.10,
   fill: false,
   className: 'colon-boundary-glow',
 };
@@ -244,19 +255,22 @@ function drawBoundary(latlngs) {
     return;
   }
 
-  // --- Capa 1: Relleno del área (base) ---
+  // --- Capa 1: Sombra exterior (efecto 3D) ---
+  L.polygon(latlngs, BOUNDARY_SHADOW_STYLE).addTo(map).bringToBack();
+
+  // --- Capa 2: Relleno del área (base) ---
   L.polygon(latlngs, BOUNDARY_FILL_STYLE).addTo(map).bringToBack();
 
-  // --- Capa 2: Glow exterior amplio ---
+  // --- Capa 3: Glow exterior MEGA amplio ---
   L.polygon(latlngs, BOUNDARY_GLOW_STYLE).addTo(map).bringToBack();
 
-  // --- Capa 3: Línea principal sólida ---
+  // --- Capa 4: Línea principal sólida ---
   const mainBoundary = L.polygon(latlngs, BOUNDARY_STYLE).addTo(map);
 
-  // --- Capa 4: Línea discontinua animada encima ---
+  // --- Capa 5: Línea discontinua animada encima ---
   L.polygon(latlngs, BOUNDARY_DASH_STYLE).addTo(map);
 
-  // --- Capa 5: Línea interior de énfasis ---
+  // --- Capa 6: Línea de acento dorado ---
   L.polygon(latlngs, BOUNDARY_INNER_STYLE).addTo(map).bringToBack();
 
   // --- Etiqueta con el nombre del municipio ---
@@ -384,7 +398,6 @@ function showPOI(poi) {
     'paisaje_cerro':     '⭐ Paisaje/cerro',
     'lago_presa':        '🌊 Lago/presa',
     'lugar_compras':     '🛍️ Lugar de compras',
-    'indeterminado':     '📍 Indeterminado',
   };
 
   const isFav = isFavorito(poi.id);

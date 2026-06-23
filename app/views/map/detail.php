@@ -133,7 +133,6 @@ require APP_PATH . '/views/layout/head.php';
             'paisaje_cerro'     => '⭐ Paisaje/cerro',
             'lago_presa'        => '🌊 Lago/presa',
             'lugar_compras'     => '🛍️ Lugar de compras',
-            'indeterminado'     => '📍 Indeterminado',
           ];
           $isotipoLabel = $isotipoMap[$business['isotipo']] ?? e($business['isotipo']);
           ?>
