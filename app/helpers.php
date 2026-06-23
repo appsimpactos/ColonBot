@@ -131,6 +131,28 @@ function getCategoryEmoji(string $icon): string
     return $map[$icon] ?? '📍';
 }
 
+/**
+ * Devuelve el emoji correspondiente al icono de una amenidad.
+ */
+function getAmenityEmoji(string $icon): string
+{
+    $map = [
+        'wifi'          => '📶',
+        'parking'       => '🅿️',
+        'paw'           => '🐾',
+        'wheelchair'    => '♿',
+        'wind'          => '🌬️',
+        'waves'         => '🌊',
+        'glass-martini' => '🍸',
+        'utensils'      => '🍽️',
+        'credit-card'   => '💳',
+        'calendar'      => '📅',
+        'user-tie'      => '👔',
+        'mountain'      => '⛰️',
+    ];
+    return $map[$icon] ?? '✓';
+}
+
 function stars(float $rating): string
 {
     $full  = (int)floor($rating);

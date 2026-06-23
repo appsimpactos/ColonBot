@@ -84,10 +84,27 @@ require APP_PATH . '/views/layout/head.php';
         <div class="flex flex-wrap gap-2">
           <?php foreach ($amenities as $a): ?>
           <span class="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full">
-            ✓ <?= e($a['name']) ?>
+            <?= getAmenityEmoji($a['icon'] ?? '') ?> <?= e($a['name']) ?>
           </span>
           <?php endforeach; ?>
         </div>
+
+        <!-- Leyenda de íconos de amenidades -->
+        <div class="mt-5 pt-4 border-t border-gray-200">
+          <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">🔣 Leyenda de íconos</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2">
+            <?php
+            $allAmenities = (new BusinessModel())->query('SELECT * FROM amenities WHERE active = 1 ORDER BY name');
+            foreach ($allAmenities as $a):
+            ?>
+            <div class="flex items-center gap-2 text-xs text-gray-600">
+              <span class="text-base"><?= getAmenityEmoji($a['icon'] ?? '') ?></span>
+              <span><?= e($a['name']) ?></span>
+            </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+
         <div class="mt-4 pt-4 border-t border-gray-100">
           <p class="text-sm text-blue-600 font-medium">
             Más información en: <?= url('mapa/' . (int)$business['id']) ?>
