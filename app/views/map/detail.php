@@ -50,7 +50,7 @@ require APP_PATH . '/views/layout/head.php';
         </div>
 
         <?php if ($business['description']): ?>
-        <p class="text-gray-600 leading-relaxed"><?= nl2br(e($business['description'])) ?></p>
+        <p class="text-gray-600" style="white-space: pre-wrap; line-height: 1.625;"><?= e($business['description']) ?></p>
         <?php endif; ?>
 
         <?php if ($business['address']): ?>
@@ -138,6 +138,13 @@ require APP_PATH . '/views/layout/head.php';
             'zoologico_wameru'  => '🦁 Zoológico Wamerú',
             'arcos_queretaro'   => '🌉 Los Arcos de Querétaro',
             'estacion_tren'     => '🚂 Estación del tren México-Querétaro',
+            'lugar_religioso'   => '⛪ Lugar religioso',
+          ];
+          $tripTypeMap = [
+            'familiar'       => '👨‍👩‍👧‍👦 Familiar',
+            'amigos'         => '🧑‍🤝‍🧑 Amigos',
+            'pareja'         => '💑 Pareja',
+            'petfriendly'    => '🐾 Petfriendly',
           ];
           $isotipoLabel = $isotipoMap[$business['isotipo']] ?? e($business['isotipo']);
           ?>
@@ -155,7 +162,6 @@ require APP_PATH . '/views/layout/head.php';
               'amigos'         => '🧑‍🤝‍🧑 Amigos',
               'pareja'         => '💑 Pareja',
               'petfriendly'    => '🐾 Petfriendly',
-              'adultos_mayores' => '👴 Adultos Mayores',
             ];
             foreach ($tripTypes as $tt):
               $ttLabel = $tripTypeMap[$tt] ?? e($tt);
@@ -242,7 +248,7 @@ require APP_PATH . '/views/layout/head.php';
       <div class="bg-white rounded-2xl shadow-sm p-5 space-y-3">
         <h3 class="font-semibold text-gray-900">Contactar</h3>
 
-        <?php if ($business['whatsapp']): ?>
+        <?php if ($business['whatsapp'] && ($business['category_slug'] ?? '') !== 'punto-de-referencia'): ?>
         <a href="<?= e(waLink($business['whatsapp'], 'Hola, vi tu perfil en Colón Turismo 🗺️')) ?>"
           target="_blank"
           onclick="trackContact('whatsapp_click', <?= (int)$business['id'] ?>)"

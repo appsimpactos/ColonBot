@@ -17,7 +17,7 @@ class BusinessModel extends Model
     public function findBySlug(string $slug): ?array
     {
         return $this->queryOne(
-            'SELECT b.*, c.name AS category_name, c.color AS category_color, c.icon AS category_icon
+            'SELECT b.*, c.name AS category_name, c.color AS category_color, c.icon AS category_icon, c.slug AS category_slug
              FROM businesses b
              JOIN categories c ON c.id = b.category_id
              WHERE b.slug = ? LIMIT 1',
@@ -37,7 +37,7 @@ class BusinessModel extends Model
 
     public function withFilters(array $filters): array
     {
-        $sql    = 'SELECT b.*, c.name AS category_name, c.color AS category_color, c.icon AS category_icon
+        $sql    = 'SELECT b.*, c.name AS category_name, c.color AS category_color, c.icon AS category_icon, c.slug AS category_slug
                    FROM businesses b JOIN categories c ON c.id = b.category_id
                    WHERE b.status = "published"';
         $params = [];

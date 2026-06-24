@@ -163,6 +163,7 @@ const ISOTIPO_ICON_MAP = {
   'zoologico_wameru':  '🦁',
   'arcos_queretaro':   '🌉',
   'estacion_tren':     '🚂',
+  'lugar_religioso':   '⛪',
 };
 
 function iconToEmoji(iconName) {
@@ -269,7 +270,6 @@ function showPOI(poi) {
     'amigos':         '🧑‍🤝‍🧑 Amigos',
     'pareja':         '💑 Pareja',
     'petfriendly':    '🐾 Petfriendly',
-    'adultos_mayores':'👴 Adultos Mayores',
   };
 
   // Isotipo labels with emojis
@@ -286,6 +286,7 @@ function showPOI(poi) {
     'zoologico_wameru':  '🦁 Zoológico Wamerú',
     'arcos_queretaro':   '🌉 Los Arcos de Querétaro',
     'estacion_tren':     '🚂 Estación del tren México-Querétaro',
+    'lugar_religioso':   '⛪ Lugar religioso',
   };
 
   const isFav = isFavorito(poi.id);
@@ -327,8 +328,8 @@ function showPOI(poi) {
       <span class="text-gray-500 ml-1">${poi.rating.toFixed(1)}</span>
     </div>
     ` : ''}
-    ${isotipoBadge ? `<div class="flex items-center gap-2 mb-3">${isotipoBadge}</div>` : ''}
-    ${tripTypeBadges ? `<div class="flex flex-wrap gap-1 mb-3">${tripTypeBadges}</div>` : ''}
+    ${!isPuntoReferencia && isotipoBadge ? `<div class="flex items-center gap-2 mb-3">${isotipoBadge}</div>` : ''}
+    ${!isPuntoReferencia && tripTypeBadges ? `<div class="flex flex-wrap gap-1 mb-3">${tripTypeBadges}</div>` : ''}
     <div class="grid grid-cols-2 gap-2">
       ${!isPuntoReferencia ? `
       <a href="${poi.url}" class="col-span-2 flex items-center justify-center gap-2 bg-blue-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-700 transition">
@@ -360,11 +361,13 @@ function showPOI(poi) {
               </a>
             </div>
           </div>`) : ''}
+      ${!isPuntoReferencia ? `
       <a href="https://wa.me/?text=Estoy%20en%20${encodeURIComponent(poi.name)}%20Colón%20Qro" target="_blank"
         onclick="trackWA(${poi.id})"
         class="flex items-center justify-center gap-1.5 bg-green-500 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-green-600 transition">
         💬 WhatsApp
       </a>
+      ` : ''}
       <a href="https://www.google.com/maps/dir/?api=1&destination=${poi.lat},${poi.lng}" target="_blank"
         class="flex items-center justify-center gap-1.5 bg-orange-500 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-orange-600 transition">
         🗺️ Cómo llegar
