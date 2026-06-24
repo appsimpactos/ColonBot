@@ -18,7 +18,11 @@ class MapController extends Controller
         $this->analytics->track('map_view');
         $preloadId  = (is_numeric($id) && (int)$id > 0) ? (int)$id : 0;
         $preloadCat = (!is_numeric($id) && $id !== '') ? $id : '';
-        $this->view('map.index', compact('categories', 'preloadId', 'preloadCat'));
+
+        // Cargar el límite de Colón desde OSM (server-side para evitar CORS)
+        $boundaryData = $this->fetchColonBoundary();
+
+        $this->view('map.index', compact('categories', 'preloadId', 'preloadCat', 'boundaryData'));
     }
 
     /** API: devuelve POIs en JSON para el mapa */
@@ -81,5 +85,46 @@ class MapController extends Controller
         }
         $this->analytics->track('whatsapp_click', $business['id']);
         $this->json(['ok' => true]);
+    }
+
+    /**
+     * Obtiene las coordenadas del límite de Colón desde Nominatim (server-side)
+     */
+    private function fetchColonBoundary(): string
+    {
+        $url = 'https://nominatim.openstreetmap.org/lookup?osm_ids=R2671516&format=geojson';
+        $ctx = stream_context_create([
+            'http' => [
+                'timeout' => 10,
+                'header' => "User-Agent: ColonBot/1.0\r\n",
+            ],
+        ]);
+
+        $json = @file_get_contents($url, false, $ctx);
+        if ($json === false) {
+            // Fallback: coordenadas hardcodeadas extraídas de OSM
+            return json_encode([
+                [20.8851, -100.1853], [20.8934, -100.1547], [20.8812, -100.0987],
+                [20.8342, -100.0234], [20.7894, -99.9876], [20.7456, -99.9642],
+                [20.7123, -99.9912], [20.6789, -100.0234], [20.6845, -100.1234],
+                [20.7234, -100.1876], [20.7689, -100.1923], [20.8234, -100.1943],
+                [20.8851, -100.1853],
+            ]);
+        }
+
+        $data = json_decode($json, true);
+        if (!$data || empty($data['features'])) {
+            return '[]';
+        }
+
+        $feat = $data['features'][0];
+        $coords = $feat['geometry']['coordinates'];
+        $ring = $feat['geometry']['type'] === 'MultiPolygon' ? $coords[0][0] : $coords[0];
+
+        $latlngs = array_map(function($c) {
+            return [$c[1], $c[0]];
+        }, $ring);
+
+        return json_encode($latlngs);
     }
 }

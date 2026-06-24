@@ -182,8 +182,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // ─── Límite municipal de Colón, Querétaro ──────────────────────────────
-// Capa que refuerza la línea divisoria territorial (la línea punteada morada de OSM)
-// Se carga desde el GeoJSON oficial de OSM para seguir EXACTAMENTE el mismo camino
+// Datos cargados desde el servidor (evita problemas de CORS)
 const BOUNDARY_COLOR = '#4A0E4E';      // Morado oscuro para resaltar la división territorial
 const BOUNDARY_FILL_COLOR = '#DC2626'; // Relleno rojo (se mantiene igual)
 
@@ -195,42 +194,14 @@ const BOUNDARY_STYLE = {
   fillOpacity: 0.04,
 };
 
-// Cargar el límite desde Nominatim (API con CORS habilitado)
-function loadColonBoundary() {
-  console.log('📍 Cargando límite de Colón desde Nominatim API...');
-  
-  fetch('https://nominatim.openstreetmap.org/lookup?osm_ids=R2671516&format=geojson', {
-    timeout: 10000,
-  })
-    .then(r => {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(geojson => {
-      if (!geojson || !geojson.features || geojson.features.length === 0)
-        throw new Error('Nominatim: sin datos');
-      
-      const feat = geojson.features[0];
-      const coords = feat.geometry.coordinates;
-      let ring;
-      if (feat.geometry.type === 'MultiPolygon') {
-        ring = coords[0][0];
-      } else {
-        ring = coords[0];
-      }
-      const latlngs = ring.map(c => [c[1], c[0]]);
-      console.log('✅ Límite cargado desde Nominatim - Puntos:', latlngs.length);
-      L.polygon(latlngs, BOUNDARY_STYLE).addTo(map);
-      console.log('✅ Límite municipal de Colón dibujado correctamente');
-    })
-    .catch(err => {
-      console.warn('⚠️ Error cargando límite:', err.message);
-    });
+// Dibujar el límite con los datos precargados desde el servidor
+const colonBoundary = <?= $boundaryData ?? '[]' ?>;
+if (colonBoundary.length >= 3) {
+  L.polygon(colonBoundary, BOUNDARY_STYLE).addTo(map);
+  console.log('✅ Límite municipal de Colón dibujado - Puntos:', colonBoundary.length);
+} else {
+  console.warn('⚠️ No se pudieron cargar los datos del límite de Colón');
 }
-
-console.log('⏳ Inicializando límite de Colón...');
-// Esperar un breve momento para que el mapa termine de renderizar
-setTimeout(loadColonBoundary, 1000);
 
 // ─── Geolocalización ─────────────────────────────────────────────────────
 if (navigator.geolocation) {
