@@ -186,11 +186,11 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const BOUNDARY_COLOR = '#000000';      // Línea negra
 const BOUNDARY_FILL_COLOR = '#DC2626'; // Relleno rojo (se mantiene igual)
 
-// Capa única - Línea de contorno gruesa y sólida para marcar claramente la división territorial
+// Capa única - Línea de contorno muy visible para marcar claramente la división territorial
 const BOUNDARY_STYLE = {
   color: BOUNDARY_COLOR,
-  weight: 6,
-  opacity: 0.8,
+  weight: 8,
+  opacity: 1.0,
   fillColor: BOUNDARY_FILL_COLOR,
   fillOpacity: 0.04,
 };
