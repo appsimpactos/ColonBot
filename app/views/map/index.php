@@ -189,7 +189,7 @@ const BOUNDARY_FILL_COLOR = '#DC2626'; // Relleno rojo (se mantiene igual)
 // Capa única - Línea de contorno muy visible para marcar claramente la división territorial
 const BOUNDARY_STYLE = {
   color: BOUNDARY_COLOR,
-  weight: 8,
+  weight: 15,
   opacity: 1.0,
   fillColor: BOUNDARY_FILL_COLOR,
   fillOpacity: 0.04,
