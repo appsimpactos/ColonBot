@@ -7,7 +7,8 @@ $flash = flash();
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       <!-- Logo -->
-      <a href="<?= url() ?>" class="flex items-center gap-2 font-bold text-white text-lg">
+      <a href="<?= url() ?>" class="flex items-center gap-3 font-bold text-white text-lg">
+        <img src="<?= asset('img/ssc.png') ?>" alt="SSC" class="h-12 w-auto">
         <img src="<?= asset('img/logo-header.png') ?>" alt="Colón" class="h-10 w-auto">
       </a>
 
