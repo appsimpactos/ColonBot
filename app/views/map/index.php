@@ -199,6 +199,8 @@ const BOUNDARY_STYLE = {
 const colonBoundary = <?= $boundaryData ?? '[]' ?>;
 if (colonBoundary.length >= 3) {
   L.polygon(colonBoundary, BOUNDARY_STYLE).addTo(map);
+  // Ajustar el mapa automáticamente para que el límite sea visible
+  map.fitBounds(L.latLngBounds(colonBoundary).pad(0.15));
   console.log('✅ Límite municipal de Colón dibujado - Puntos:', colonBoundary.length);
 } else {
   console.warn('⚠️ No se pudieron cargar los datos del límite de Colón');
