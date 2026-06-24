@@ -181,8 +181,84 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 18,
 }).addTo(map);
 
-// ─── NOTA: La línea de división territorial de Colón fue removida ──
-// Se elimina la capa personalizada del límite municipal para no superponerla al mapa.
+// ─── Límite municipal de Colón, Querétaro ──────────────────────────────
+// Capa que refuerza la línea divisoria territorial (la línea punteada morada de OSM)
+const BOUNDARY_COLOR = '#4A0E4E';      // Morado oscuro para resaltar la división territorial
+const BOUNDARY_FILL_COLOR = '#DC2626'; // Relleno rojo (se mantiene igual)
+
+const BOUNDARY_STYLE = {
+  color: BOUNDARY_COLOR,
+  weight: 3,
+  opacity: 0.9,
+  fillColor: BOUNDARY_FILL_COLOR,
+  fillOpacity: 0.04,
+};
+
+function drawBoundary(latlngs) {
+  if (!latlngs || latlngs.length < 3) {
+    console.error('Coordenadas insuficientes para dibujar el límite');
+    return;
+  }
+  L.polygon(latlngs, BOUNDARY_STYLE).addTo(map);
+  console.log('✅ Límite municipal de Colón dibujado correctamente');
+}
+
+// ─── Límite HARDCODEADO de Colón (respaldo si Nominatim falla) ───
+const COLON_BOUNDARY_FALLBACK = [
+  [20.8851, -100.1853],  // Noroeste
+  [20.8934, -100.1547],  // Norte
+  [20.8812, -100.0987],  // Noreste
+  [20.8342, -100.0234],  // Este
+  [20.7894, -99.9876],   // Sureste
+  [20.7456, -99.9642],   // Sur-centro
+  [20.7123, -99.9912],   // Suroeste
+  [20.6789, -100.0234],  // Oeste-sur
+  [20.6845, -100.1234],  // Oeste-centro
+  [20.7234, -100.1876],  // Oeste-norte
+  [20.7689, -100.1923],  // Centro-norte
+  [20.8234, -100.1943],  // Norte-oeste
+  [20.8851, -100.1853],  // Cierre del polígono
+];
+
+function loadColonBoundary() {
+  console.log('📍 Iniciando carga del límite de Colón...');
+  
+  fetch('https://nominatim.openstreetmap.org/lookup?osm_ids=R2671516&format=geojson', {
+    timeout: 5000,
+  })
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(geojson => {
+      if (!geojson || !geojson.features || geojson.features.length === 0) {
+        throw new Error('Nominatim: sin datos');
+      }
+      const feat = geojson.features[0];
+      const coords = feat.geometry.coordinates;
+      let ring;
+      if (feat.geometry.type === 'MultiPolygon') {
+        ring = coords[0][0];
+      } else {
+        ring = coords[0];
+      }
+      const latlngs = ring.map(c => [c[1], c[0]]);
+      console.log('✅ Límite cargado desde Nominatim - Puntos:', latlngs.length);
+      drawBoundary(latlngs);
+    })
+    .catch(err => {
+      console.warn('⚠️ Nominatim falló, usando límite fallback:', err.message);
+      console.log('📍 Dibujando polígono fallback con', COLON_BOUNDARY_FALLBACK.length, 'puntos');
+      drawBoundary(COLON_BOUNDARY_FALLBACK);
+    });
+}
+
+console.log('⏳ Esperando disponibilidad de Leaflet...');
+if (typeof L !== 'undefined') {
+  loadColonBoundary();
+} else {
+  setTimeout(loadColonBoundary, 500);
+}
 
 // ─── Geolocalización ─────────────────────────────────────────────────────
 if (navigator.geolocation) {
