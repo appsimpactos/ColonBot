@@ -11,7 +11,7 @@
     }
   </script>
   <!-- Footer -->
-  <footer class="py-3 px-4 text-white text-xs flex items-center justify-between" style="background-color: var(--color-primary)">
+  <footer class="py-3 px-4 text-white text-xs flex items-center justify-center" style="background-color: var(--color-primary)">
     <span class="opacity-80">&copy; <?= date('Y') ?> Municipio de Colón, Querétaro. Todos los derechos reservados.</span>
   </footer>
 </body>

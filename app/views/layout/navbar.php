@@ -9,7 +9,7 @@ $flash = flash();
       <!-- Logo -->
       <a href="<?= url() ?>" class="flex items-center gap-3 font-bold text-white text-lg">
         <img src="<?= asset('img/logo-header-nuevo.jpeg') ?>" alt="Colón" class="h-12 w-auto">
-        <img src="<?= asset('img/COLÓN.png') ?>" alt="Colón" class="h-12 w-auto">
+        <img src="<?= asset('img/colon.png') ?>" alt="Colón" class="h-12 w-auto">
         <span class="text-base font-medium whitespace-nowrap" style="color: #8B5CF6">Plataforma Turística de Colón</span>
       </a>
 
