@@ -3,16 +3,18 @@ $user = currentUser();
 $flash = flash();
 ?>
 <!-- Top Navigation -->
-<nav class="shadow-sm sticky top-0 z-50" style="background-color: var(--color-primary)">
+<nav class="shadow-sm sticky top-0 z-50 bg-white">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       <!-- Logo -->
       <a href="<?= url() ?>" class="flex items-center gap-3 font-bold text-white text-lg">
         <img src="<?= asset('img/logo-header-nuevo.jpeg') ?>" alt="Colón" class="h-12 w-auto">
+        <img src="<?= asset('img/COLÓN.png') ?>" alt="Colón" class="h-12 w-auto">
+        <span class="text-base font-medium whitespace-nowrap" style="color: #8B5CF6">Plataforma Turística de Colón</span>
       </a>
 
       <!-- Desktop menu -->
-      <div class="hidden md:flex items-center gap-6 text-sm font-medium text-white">
+      <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
         <a href="<?= url('mapa') ?>" class="hover:opacity-80 transition">🗺️ Mapa</a>
         <?php if ($user): ?>
           <?php if (hasRole('admin')): ?>
@@ -23,14 +25,14 @@ $flash = flash();
             <a href="<?= url('configuraciones') ?>" class="hover:opacity-80 transition">⚙️ Config</a>
           <?php endif; ?>
           <a href="<?= url('admin') ?>" class="hover:opacity-80 transition">🏢 Mi Negocio</a>
-          <a href="<?= url('logout') ?>" class="text-red-200 hover:text-red-100 transition">Salir</a>
+          <a href="<?= url('logout') ?>" class="text-red-600 hover:text-red-700 transition">Salir</a>
         <?php else: ?>
-          <a href="<?= url('login') ?>" class="bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg hover:bg-opacity-30 transition">Ingresar</a>
+          <a href="<?= url('login') ?>" class="bg-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition">Ingresar</a>
         <?php endif; ?>
       </div>
 
       <!-- Mobile hamburger -->
-      <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition text-white">
+      <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition text-gray-700">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
@@ -39,7 +41,7 @@ $flash = flash();
   </div>
 
   <!-- Mobile menu -->
-  <div id="mobile-menu" class="hidden md:hidden border-t border-white border-opacity-20 bg-white">
+  <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 bg-white">
     <div class="px-4 py-3 space-y-2 text-sm font-medium text-gray-700">
       <a href="<?= url('mapa') ?>" class="block py-2 hover:opacity-80">🗺️ Mapa Turístico</a>
       <?php if ($user): ?>
