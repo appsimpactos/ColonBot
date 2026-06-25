@@ -128,6 +128,7 @@ const MAP_LNG  = <?= setting('map_lng','-99.7242') ?>;
 const MAP_ZOOM = <?= setting('map_zoom','13') ?>;
 const PRELOAD_ID  = <?= (int)($preloadId ?? 0) ?>;
 const PRELOAD_CAT = '<?= e($preloadCat ?? '') ?>';
+const BOUNDARY_DATA = <?= $boundaryData ?: '[]' ?>;
 const CHATBOT_ACTIVE    = <?= setting('chatbot_active', '0') === '1' ? 'true' : 'false' ?>;
 const CHATBOT_WA_NUMBER = '<?= e(setting('chatbot_wa_number', '')) ?>';
 
@@ -179,8 +180,17 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 18,
 }).addTo(map);
 
-// ─── Sin división territorial ─────────────────────────────────────────
-// El mapa muestra únicamente los lugares turísticos sin líneas divisorias
+// ─── División territorial (límite municipal de Colón) ──────────────────
+if (BOUNDARY_DATA && BOUNDARY_DATA.length > 0) {
+  L.polygon(BOUNDARY_DATA, {
+    color: '#8B5CF6',
+    weight: 2,
+    opacity: 0.8,
+    fillColor: '#8B5CF6',
+    fillOpacity: 0.05,
+    dashArray: '8, 8',
+  }).addTo(map);
+}
 
 // ─── Geolocalización ─────────────────────────────────────────────────────
 if (navigator.geolocation) {
