@@ -33,7 +33,7 @@ class TouristController extends Controller
         $emergencyNumbers = $this->emergency->active();
         $activePromotions = $this->promotions->active();
 
-        $this->view('tourist.dashboard', compact('user', 'profile', 'topVisited', 'emergencyNumbers', 'activePromotions'));
+        $this->view('tourist.dashboard', compact('user', 'profile', 'topVisited', 'emergencyNumbers', 'activePromotions') + ['csrf' => $this->csrf()]);
     }
 
     public function register(): void
