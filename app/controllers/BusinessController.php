@@ -22,6 +22,109 @@ class BusinessController extends Controller
         $this->view('business.dashboard', compact('businesses', 'user'));
     }
 
+    // ── Micrositio del Prestador ─────────────────────────────────────────
+
+    public function microsite(): void
+    {
+        $this->requireAuth('prestador');
+        $user = currentUser();
+        $businesses = $user['role'] === 'superadmin'
+            ? $this->businesses->allWithCategory()
+            : $this->businesses->byUser((int)$user['id']);
+
+        if (empty($businesses)) {
+            $this->flash('info', 'Primero debes registrar un negocio.');
+            $this->redirect('admin/negocio/crear');
+        }
+
+        $this->view('business.microsite', compact('businesses', 'user'));
+    }
+
+    public function micrositeDashboard(string $id): void
+    {
+        $this->requireAuth('prestador');
+        $business = $this->businesses->find((int)$id);
+        if (!$business) { http_response_code(404); return; }
+        $this->ownerOrAdmin($business);
+
+        $user = currentUser();
+        $images = $this->businesses->images((int)$id);
+        $services = $this->businesses->allServices((int)$id);
+        $products = $this->businesses->allProducts((int)$id);
+        $events = $this->businesses->allEvents((int)$id);
+        $reviews = $this->businesses->reviews((int)$id);
+
+        // CRM metrics
+        $contactModel = new ContactModel();
+        $metrics = $contactModel->getMetrics((int)$id);
+        $chartData = $contactModel->getChartData((int)$id, 'month');
+
+        // Analytics from map & whatsapp
+        $analyticsModel = new AnalyticsModel();
+        $db = Database::getInstance();
+        $mapViews = (int)$db->query(
+            "SELECT COUNT(*) FROM analytics WHERE business_id = ? AND event = 'map_view'",
+            [(int)$id]
+        )->fetchColumn();
+        $waClicks = (int)$db->query(
+            "SELECT COUNT(*) FROM analytics WHERE business_id = ? AND event = 'whatsapp_click'",
+            [(int)$id]
+        )->fetchColumn();
+
+        $this->view('business.microsite_dashboard', compact(
+            'business', 'user', 'images', 'services', 'products', 'events', 'reviews',
+            'metrics', 'chartData', 'mapViews', 'waClicks'
+        ) + ['csrf' => $this->csrf()]);
+    }
+
+    public function micrositeCharts(string $id): void
+    {
+        $this->requireAuth('prestador');
+        $business = $this->businesses->find((int)$id);
+        if (!$business) { $this->json(['error' => 'not found'], 404); }
+        $this->ownerOrAdmin($business);
+
+        $period = $_GET['period'] ?? 'month';
+        $db = Database::getInstance();
+
+        // Chart data: views vs whatsapp clicks over time
+        $format = $period === 'year' ? '%Y-%m' : '%Y-%m-%d';
+        $interval = $period === 'year' ? 12 : ($period === 'month' ? 30 : 7);
+
+        $chartData = $db->query(
+            "SELECT DATE_FORMAT(created_at, '$format') AS label,
+                    SUM(CASE WHEN event = 'map_view' THEN 1 ELSE 0 END) AS map_views,
+                    SUM(CASE WHEN event = 'whatsapp_click' THEN 1 ELSE 0 END) AS wa_clicks
+             FROM analytics
+             WHERE business_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL $interval $period)
+             GROUP BY label
+             ORDER BY label ASC",
+            [(int)$id]
+        )->fetchAll();
+
+        $this->json($chartData);
+    }
+
+    public function toggleOpen(string $id): void
+    {
+        $this->requireAuth('prestador');
+        $this->verifyCsrf();
+
+        $business = $this->businesses->find((int)$id);
+        if (!$business) { $this->json(['error' => 'not found'], 404); }
+        $this->ownerOrAdmin($business);
+
+        $isOpen = isset($_POST['is_open']) ? (int)$_POST['is_open'] : (int)(!$business['is_open']);
+        $this->businesses->update((int)$id, [
+            'is_open' => $isOpen,
+            'open_for_messaging' => in_array($_POST['open_for_messaging'] ?? $business['open_for_messaging'], ['24hrs', 'schedule'])
+                ? $_POST['open_for_messaging'] : $business['open_for_messaging'],
+        ]);
+
+        $this->logAction('toggle_business_open', 'businesses', (int)$id, $isOpen ? 'Abierto' : 'Cerrado');
+        $this->json(['ok' => true, 'is_open' => $isOpen]);
+    }
+
     public function index(): void
     {
         $this->requireAuth('admin');

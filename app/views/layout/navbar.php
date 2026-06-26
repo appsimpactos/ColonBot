@@ -24,7 +24,19 @@ $flash = flash();
             <a href="<?= url('superadmin') ?>" class="hover:opacity-80 transition">📊 Dashboard</a>
             <a href="<?= url('configuraciones') ?>" class="hover:opacity-80 transition">⚙️ Config</a>
           <?php endif; ?>
-          <a href="<?= url('admin') ?>" class="hover:opacity-80 transition">🏢 Mi Negocio</a>
+          <?php if (hasRole('prestador')): ?>
+            <a href="<?= url('admin/micrositio') ?>" class="hover:opacity-80 transition">🏢 Micrositio</a>
+            <a href="<?= url('admin/crm') ?>" class="hover:opacity-80 transition">📇 CRM</a>
+            <a href="<?= url('admin/promociones') ?>" class="hover:opacity-80 transition">🎉 Promos</a>
+          <?php endif; ?>
+          <?php if (hasRole('colaborador')): ?>
+            <a href="<?= url('colaborador') ?>" class="hover:opacity-80 transition">📊 Turismo</a>
+            <a href="<?= url('colaborador/eventos') ?>" class="hover:opacity-80 transition">🎉 Eventos</a>
+          <?php endif; ?>
+          <?php if (hasRole('turista')): ?>
+            <a href="<?= url('turista') ?>" class="hover:opacity-80 transition">👤 Mi Perfil</a>
+          <?php endif; ?>
+          <a href="<?= url('admin') ?>" class="hover:opacity-80 transition">🏢 Negocio</a>
           <a href="<?= url('logout') ?>" class="text-red-600 hover:text-red-700 transition">Salir</a>
         <?php else: ?>
           <a href="<?= url('login') ?>" class="bg-primary text-white px-4 py-2 rounded-lg hover:opacity-90 transition">Ingresar</a>

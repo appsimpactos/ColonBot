@@ -9,7 +9,18 @@ class BusinessModel extends Model
             'SELECT b.*, c.name AS category_name, c.color AS category_color, c.icon AS category_icon
              FROM businesses b
              JOIN categories c ON c.id = b.category_id
-             WHERE b.status = "published"
+             WHERE b.status = "published" AND b.is_open = 1
+             ORDER BY b.featured DESC, b.rating DESC'
+        );
+    }
+
+    public function publishedForChatbot(): array
+    {
+        return $this->query(
+            'SELECT b.*, c.name AS category_name, c.color AS category_color, c.icon AS category_icon
+             FROM businesses b
+             JOIN categories c ON c.id = b.category_id
+             WHERE b.status = "published" AND b.is_open = 1
              ORDER BY b.featured DESC, b.rating DESC'
         );
     }

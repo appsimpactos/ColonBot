@@ -46,9 +46,12 @@ function hasRole(string $role): bool
     $user = currentUser();
     if (!$user) return false;
     return match ($role) {
-        'superadmin' => $user['role'] === 'superadmin',
-        'admin'      => in_array($user['role'], ['admin', 'superadmin'], true),
-        default      => true,
+        'superadmin'  => $user['role'] === 'superadmin',
+        'admin'       => in_array($user['role'], ['admin', 'superadmin'], true),
+        'prestador'   => in_array($user['role'], ['prestador', 'admin', 'superadmin'], true),
+        'colaborador' => in_array($user['role'], ['colaborador', 'admin', 'superadmin'], true),
+        'turista'     => in_array($user['role'], ['turista', 'admin', 'superadmin'], true),
+        default       => true,
     };
 }
 

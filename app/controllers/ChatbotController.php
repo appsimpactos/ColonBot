@@ -130,7 +130,14 @@ class ChatbotController extends Controller
 
     private function listByCategory(string $catSlug, string $title): array
     {
-        $businesses = $this->businesses->withFilters(['category' => $catSlug]);
+        // Only show published AND open businesses in chatbot
+        $businesses = $this->businesses->publishedForChatbot();
+        // Filter by category
+        if ($catSlug) {
+            $businesses = array_filter($businesses, function($b) use ($catSlug) {
+                return ($b['category_slug'] ?? '') === $catSlug;
+            });
+        }
 
         if (empty($businesses)) {
             return ['type' => 'text', 'text' => ['body' => "No encontré resultados para esa categoría.\n\n🗺️ Explora el mapa interactivo: " . url('mapa') . "\n\nEscribe *menú* para regresar."]];

@@ -61,7 +61,14 @@ class AuthController extends Controller
         ];
 
         $this->logAction('login', 'users', $user['id']);
-        $this->redirect($user['role'] === 'superadmin' ? 'superadmin' : 'admin');
+        $redirect = match ($user['role']) {
+            'superadmin'  => 'superadmin',
+            'colaborador' => 'colaborador',
+            'turista'     => 'turista',
+            'prestador'   => 'admin/micrositio',
+            default       => 'admin',
+        };
+        $this->redirect($redirect);
     }
 
     public function logout(): void

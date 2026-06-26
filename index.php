@@ -65,6 +65,50 @@ $router->get('admin/notificaciones',    'NotificationController', 'index');
 $router->post('admin/notificaciones/{id}/leer', 'NotificationController', 'markRead');
 $router->post('admin/notificaciones/leer-todas', 'NotificationController', 'markAllRead');
 
+// ─── Prestador de Servicios (Micrositio) ─────────────────────────
+$router->get('admin/micrositio',            'BusinessController', 'microsite');
+$router->get('admin/micrositio/{id}/dashboard', 'BusinessController', 'micrositeDashboard');
+$router->get('admin/micrositio/{id}/graficas', 'BusinessController', 'micrositeCharts');
+$router->post('admin/micrositio/{id}/toggle',  'BusinessController', 'toggleOpen');
+
+// ─── CRM ──────────────────────────────────────────────────────────
+$router->get('admin/crm',               'CrmController',       'index');
+$router->get('admin/crm/{id}/list',     'CrmController',       'list');
+$router->post('admin/crm/crear',        'CrmController',       'add');
+$router->post('admin/crm/{id}/actualizar',  'CrmController',   'update');
+$router->post('admin/crm/{id}/upgrade', 'CrmController',       'upgradeToCliente');
+$router->post('admin/crm/{id}/compra',  'CrmController',       'addPurchase');
+$router->get('admin/crm/{id}/whatsapp', 'CrmController',       'sendWhatsapp');
+$router->get('admin/crm/{id}/metrics',  'CrmController',       'metrics');
+
+// ─── Promociones ──────────────────────────────────────────────────
+$router->get('admin/promociones',             'PromotionController', 'index');
+$router->get('admin/promociones/{id}/list',   'PromotionController', 'list');
+$router->post('admin/promociones/crear',      'PromotionController', 'create');
+$router->post('admin/promociones/{id}/editar','PromotionController', 'update');
+$router->post('admin/promociones/{id}/toggle','PromotionController', 'toggleStatus');
+$router->post('admin/promociones/{id}/enviar','PromotionController', 'send');
+$router->get('admin/promociones/{id}/historial','PromotionController', 'sendHistory');
+
+// ─── Colaborador de Secretaría de Turismo ─────────────────────────
+$router->get('colaborador',                    'ColaboradorController', 'dashboard');
+$router->get('colaborador/eventos',            'ColaboradorController', 'events');
+$router->post('colaborador/eventos/crear',     'ColaboradorController', 'createGlobalEvent');
+$router->post('colaborador/eventos/{id}/aprobar','ColaboradorController', 'approvePromotion');
+$router->post('colaborador/negocios/{id}/reestablecer-valoraciones', 'ColaboradorController', 'resetRatings');
+$router->get('colaborador/negocios/{id}/contactar', 'ColaboradorController', 'contactProvider');
+$router->get('colaborador/metricas',           'ColaboradorController', 'metrics');
+
+// ─── Turista ──────────────────────────────────────────────────────
+$router->get('turista',                    'TouristController', 'dashboard');
+$router->post('turista/registrar',         'TouristController', 'register');
+$router->post('turista/valorar',           'TouristController', 'submitReview');
+$router->get('turista/emergencia',         'TouristController', 'emergency');
+$router->get('turista/reservar/{id}',      'TouristController', 'makeReservation');
+
+// ─── API Pública ──────────────────────────────────────────────────
+$router->get('api/promociones',            'PromotionController', 'apiPromotions');
+
 // SuperAdmin
 $router->get('superadmin',              'DashboardController', 'index');
 $router->get('superadmin/usuarios',     'DashboardController', 'users');
