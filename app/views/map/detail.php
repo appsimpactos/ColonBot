@@ -128,7 +128,7 @@ require APP_PATH . '/views/layout/head.php';
           $isotipoMap = [
             'restaurante'       => '🍽️ Restaurante',
             'lugares_historicos' => '🏛️ Lugares históricos',
-            'viniedo'           => '🍷 Viñedo',
+            'viniedo'           => "\u{1F347} Viñedo",
             'hotel'             => '🏨 Hotel',
             'paisaje_cerro'     => '⭐ Paisaje/cerro',
             'lago_presa'        => '🌊 Lago/presa',

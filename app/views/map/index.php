@@ -134,34 +134,34 @@ const CHATBOT_WA_NUMBER = '<?= e(setting('chatbot_wa_number', '')) ?>';
 
 // ─── Icon name → emoji mapping for category symbols (panels/modals) ────
 const ICON_MAP = {
-  'utensils':      '🍽️',
-  'hotel':         '🏨',
-  'wine':          '🍷',
-  'landmark':      '🏛️',
-  'star':          '⭐',
-  'waves':         '🌊',
-  'shopping-bag':  '🛍️',
-  'map-pin':       '📍',
-  'cross':         '✝️',     // Turismo religioso
-  'ecoturismo':    '⭐',     // Ecoturismo y Aventura (estrella)
-  'default':       '📍',
+  'utensils':      '\u{1F37D}\u{FE0F}',
+  'hotel':         '\u{1F3E8}',
+  'wine':          '\u{1F377}',
+  'landmark':      '\u{1F3DB}\u{FE0F}',
+  'star':          '\u{2B50}',
+  'waves':         '\u{1F30A}',
+  'shopping-bag':  '\u{1F6CD}\u{FE0F}',
+  'map-pin':       '\u{1F4CD}',
+  'cross':         '\u{271D}\u{FE0F}',
+  'ecoturismo':    '\u{2B50}',
+  'default':       '\u{1F4CD}',
 };
 
 const ISOTIPO_ICON_MAP = {
-  'restaurante':       '🍽️',
-  'lugares_historicos': '🏛️',
-  'viniedo':           '🍷',
-  'hotel':             '🏨',
-  'paisaje_cerro':     '⭐',
-  'lago_presa':        '🌊',
-  'lugar_compras':     '🛍️',
-  'pena_bernal':       '🏔️',
-  'aeropuerto':        '✈️',
-  'zoologico_wameru':  '🦁',
-  'arcos_queretaro':   '🌉',
-  'estacion_tren':     '🚂',
-  'lugar_religioso':   '⛪',
-  'apicultura':        '🐝',
+  'restaurante':       '\u{1F37D}\u{FE0F}',
+  'lugares_historicos': '\u{1F3DB}\u{FE0F}',
+  'viniedo':           '\u{1F347}',
+  'hotel':             '\u{1F3E8}',
+  'paisaje_cerro':     '\u{2B50}',
+  'lago_presa':        '\u{1F30A}',
+  'lugar_compras':     '\u{1F6CD}\u{FE0F}',
+  'pena_bernal':       '\u{1F3D4}\u{FE0F}',
+  'aeropuerto':        '\u{2708}\u{FE0F}',
+  'zoologico_wameru':  '\u{1F981}',
+  'arcos_queretaro':   '\u{1F309}',
+  'estacion_tren':     '\u{1F682}',
+  'lugar_religioso':   '\u{26EA}',
+  'apicultura':        '\u{1F41D}',
 };
 
 function iconToEmoji(iconName) {
@@ -176,13 +176,13 @@ function isotipoToEmoji(isotipo) {
 const map = L.map('map', { zoomControl: true }).setView([MAP_LAT, MAP_LNG], MAP_ZOOM);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  attribution: '\u00A9 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   maxZoom: 18,
 }).addTo(map);
 
-// ─── División territorial (límite municipal de Colón) ──────────────────
+// ─── Divisi\u00F3n territorial (l\u00EDmite municipal de Col\u00F3n) ──────────────────
 if (BOUNDARY_DATA && BOUNDARY_DATA.length > 0) {
-  // Si es array de arrays (múltiples anillos), dibujar cada uno como polyline
+  // Si es array de arrays (m\u00FAltiples anillos), dibujar cada uno como polyline
   if (Array.isArray(BOUNDARY_DATA[0])) {
     BOUNDARY_DATA.forEach(ring => {
       L.polyline(ring, {
@@ -203,13 +203,13 @@ if (BOUNDARY_DATA && BOUNDARY_DATA.length > 0) {
   }
 }
 
-// ─── Geolocalización ─────────────────────────────────────────────────────
+// ─── Geolocalizaci\u00F3n ─────────────────────────────────────────────────────
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(pos => {
     const { latitude: lat, longitude: lng } = pos.coords;
     L.circleMarker([lat, lng], {
       radius: 8, color: '#3B82F6', fillColor: '#3B82F6', fillOpacity: 0.8, weight: 2,
-    }).addTo(map).bindPopup('📍 Tu ubicación');
+    }).addTo(map).bindPopup('\u{1F4CD} Tu ubicaci\u00F3n');
   });
 }
 
@@ -265,28 +265,28 @@ function showPOI(poi) {
 
   // Trip type labels with emojis
   const TRIP_TYPE_MAP = {
-    'familiar':       '👨‍👩‍👧‍👦 Familiar',
-    'amigos':         '🧑‍🤝‍🧑 Amigos',
-    'pareja':         '💑 Pareja',
-    'petfriendly':    '🐾 Petfriendly',
+    'familiar':       '\u{1F468}\u200D\u{1F469}\u200D\u{1F467}\u200D\u{1F466} Familiar',
+    'amigos':         '\u{1F9D1}\u200D\u{1F91D}\u200D\u{1F9D1} Amigos',
+    'pareja':         '\u{1F491} Pareja',
+    'petfriendly':    '\u{1F43E} Petfriendly',
   };
 
   // Isotipo labels with emojis
   const ISOTIPO_LABEL_MAP = {
-    'restaurante':       '🍽️ Restaurante',
-    'lugares_historicos':'🏛️ Lugares históricos',
-    'viniedo':           '🍷 Viñedo',
-    'hotel':             '🏨 Hotel',
-    'paisaje_cerro':     '⭐ Paisaje/cerro',
-    'lago_presa':        '🌊 Lago/presa',
-    'lugar_compras':     '🛍️ Lugar de compras',
-    'pena_bernal':       '🏔️ Peña de Bernal',
-    'aeropuerto':        '✈️ Aeropuerto',
-    'zoologico_wameru':  '🦁 Zoológico Wamerú',
-    'arcos_queretaro':   '🌉 Los Arcos de Querétaro',
-    'estacion_tren':     '🚂 Estación del tren México-Querétaro',
-    'lugar_religioso':   '⛪ Lugar religioso',
-    'apicultura':        '🐝 Apicultura',
+    'restaurante':       '\u{1F37D}\u{FE0F} Restaurante',
+    'lugares_historicos':'\u{1F3DB}\u{FE0F} Lugares hist\u00F3ricos',
+    'viniedo':           '\u{1F347} Vi\u00F1edo',
+    'hotel':             '\u{1F3E8} Hotel',
+    'paisaje_cerro':     '\u{2B50} Paisaje/cerro',
+    'lago_presa':        '\u{1F30A} Lago/presa',
+    'lugar_compras':     '\u{1F6CD}\u{FE0F} Lugar de compras',
+    'pena_bernal':       '\u{1F3D4}\u{FE0F} Pe\u00F1a de Bernal',
+    'aeropuerto':        '\u{2708}\u{FE0F} Aeropuerto',
+    'zoologico_wameru':  '\u{1F981} Zool\u00F3gico Wamer\u00FA',
+    'arcos_queretaro':   '\u{1F309} Los Arcos de Quer\u00E9taro',
+    'estacion_tren':     '\u{1F682} Estaci\u00F3n del tren M\u00E9xico-Quer\u00E9taro',
+    'lugar_religioso':   '\u{26EA} Lugar religioso',
+    'apicultura':        '\u{1F41D} Apicultura',
   };
 
   const isFav = isFavorito(poi.id);
@@ -314,7 +314,7 @@ function showPOI(poi) {
       <div class="flex items-center gap-1 shrink-0">
         <span class="text-xs px-2 py-1 rounded-full text-white font-medium" style="background:${poi.category_color}">${categoryEmoji} ${poi.category}</span>
         <button onclick="toggleFavorito(${poi.id})" id="fav-btn-${poi.id}"
-          class="p-1.5 rounded-full hover:bg-pink-50 transition" title="${isFav ? 'Quitar de favoritos' : 'Añadir a favoritos'}">
+          class="p-1.5 rounded-full hover:bg-pink-50 transition" title="${isFav ? 'Quitar de favoritos' : 'A\u00F1adir a favoritos'}">
           <svg class="w-5 h-5 ${isFav ? 'text-pink-500 fill-current' : 'text-gray-300'}" viewBox="0 0 24 24">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
               ${isFav ? '' : 'stroke="currentColor" stroke-width="1.5" fill="none"'}/>
@@ -324,7 +324,7 @@ function showPOI(poi) {
     </div>
     ${!isPuntoReferencia ? `
     <div class="flex items-center gap-1 text-yellow-400 text-sm mb-3">
-      ${'★'.repeat(Math.round(poi.rating))}${'☆'.repeat(5-Math.round(poi.rating))}
+      ${'\u2605'.repeat(Math.round(poi.rating))}${'\u2606'.repeat(5-Math.round(poi.rating))}
       <span class="text-gray-500 ml-1">${poi.rating.toFixed(1)}</span>
     </div>
     ` : ''}
@@ -339,38 +339,38 @@ function showPOI(poi) {
       ${!isPuntoReferencia ? (CHATBOT_ACTIVE && CHATBOT_WA_NUMBER
         ? `<a href="https://wa.me/${CHATBOT_WA_NUMBER}?text=${encodeURIComponent('Hola, quiero ver las opciones para ' + poi.name)}" target="_blank"
             class="col-span-2 flex items-center justify-center gap-2 bg-purple-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-purple-700 transition">
-            🛒 Reservar/Comprar
+            \u{1F6D2} Reservar/Comprar
           </a>`
         : `<button type="button" onclick="toggleReservarMenu(this)"
             class="col-span-2 flex items-center justify-center gap-2 bg-purple-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-purple-700 transition">
-            🛒 Reservar/Comprar
+            \u{1F6D2} Reservar/Comprar
           </button>
           <div class="col-span-2 hidden reservar-menu">
             <div class="grid grid-cols-2 gap-2 mt-1">
               <a href="${poi.url}#productos" class="flex items-center justify-center gap-1.5 bg-blue-50 text-blue-700 border border-blue-200 py-2 rounded-xl text-sm font-medium hover:bg-blue-100 transition">
-                🛍️ Productos
+                \u{1F6CD}\u{FE0F} Productos
               </a>
               <a href="${poi.url}#servicios" class="flex items-center justify-center gap-1.5 bg-green-50 text-green-700 border border-green-200 py-2 rounded-xl text-sm font-medium hover:bg-green-100 transition">
-                📋 Servicios
+                \u{1F4CB} Servicios
               </a>
               <a href="${poi.url}#amenidades" class="flex items-center justify-center gap-1.5 bg-orange-50 text-orange-700 border border-orange-200 py-2 rounded-xl text-sm font-medium hover:bg-orange-100 transition">
-                🛎️ Amenidades
+                \u{1F6CE}\u{FE0F} Amenidades
               </a>
               <a href="${poi.url}#eventos" class="flex items-center justify-center gap-1.5 bg-purple-50 text-purple-700 border border-purple-200 py-2 rounded-xl text-sm font-medium hover:bg-purple-100 transition">
-                🎉 Eventos
+                \u{1F389} Eventos
               </a>
             </div>
           </div>`) : ''}
       ${!isPuntoReferencia ? `
-      <a href="https://wa.me/?text=Estoy%20en%20${encodeURIComponent(poi.name)}%20Colón%20Qro" target="_blank"
+      <a href="https://wa.me/?text=Estoy%20en%20${encodeURIComponent(poi.name)}%20Col\u00F3n%20Qro" target="_blank"
         onclick="trackWA(${poi.id})"
         class="flex items-center justify-center gap-1.5 bg-green-500 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-green-600 transition">
-        💬 WhatsApp
+        \u{1F4AC} WhatsApp
       </a>
       ` : ''}
       <a href="https://www.google.com/maps/dir/?api=1&destination=${poi.lat},${poi.lng}" target="_blank"
         class="flex items-center justify-center gap-1.5 bg-orange-500 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-orange-600 transition">
-        🗺️ Cómo llegar
+        \u{1F5FA}\u{FE0F} C\u00F3mo llegar
       </a>
     </div>
   `;
@@ -546,7 +546,7 @@ function toggleFavorito(id) {
       path.setAttribute('stroke-width', '1.5');
       path.setAttribute('fill', 'none');
     }
-    btn.title = isFav ? 'Quitar de favoritos' : 'Añadir a favoritos';
+    btn.title = isFav ? 'Quitar de favoritos' : 'A\u00F1adir a favoritos';
   });
 }
 
@@ -565,7 +565,7 @@ function openFavoritos() {
   const favs = getFavoritos();
   const list = document.getElementById('favoritos-list');
   if (favs.length === 0) {
-    list.innerHTML = '<p class="text-center text-gray-400 py-8">Aún no tienes favoritos.<br>Toca el corazón en cualquier negocio para añadirlo.</p>';
+    list.innerHTML = '<p class="text-center text-gray-400 py-8">A\u00FAn no tienes favoritos.<br>Toca el coraz\u00F3n en cualquier negocio para a\u00F1adirlo.</p>';
   } else {
     list.innerHTML = favs.map(poi => {
       const categoryEmoji = iconToEmoji(poi.category_icon);
