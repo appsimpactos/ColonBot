@@ -64,10 +64,12 @@ $flash = flash();
         <span class="text-lg">🗺️</span> Mapa Turístico
       </a>
 
-      <?php if ($user): ?>
+      <?php if ($user):
+        $role = $user['role']; // Strict role check - no hasRole() to avoid overlaps
+      ?>
 
-        <!-- SUPERADMIN -->
-        <?php if (hasRole('superadmin')): ?>
+        <!-- SUPERADMIN (strict) -->
+        <?php if ($role === 'superadmin'): ?>
         <div class="pt-3 pb-1 text-xs uppercase tracking-wide text-gray-400 font-semibold px-3">Administración</div>
         <a href="<?= url('superadmin') ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition">
           <span class="text-lg">📊</span> Dashboard
@@ -75,10 +77,22 @@ $flash = flash();
         <a href="<?= url('configuraciones') ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition">
           <span class="text-lg">⚙️</span> Configuraciones
         </a>
+        <a href="<?= url('admin') ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition">
+          <span class="text-lg">🏢</span> Mis Negocios
+        </a>
+        <a href="<?= url('admin/micrositio') ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition">
+          <span class="text-lg">🏢</span> Micrositio
+        </a>
+        <a href="<?= url('admin/crm') ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition">
+          <span class="text-lg">📇</span> CRM
+        </a>
+        <a href="<?= url('admin/notificaciones') ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition">
+          <span class="text-lg">🔔</span> Notificaciones
+        </a>
         <?php endif; ?>
 
-        <!-- ADMIN -->
-        <?php if (hasRole('admin')): ?>
+        <!-- ADMIN (strict) -->
+        <?php if ($role === 'admin'): ?>
         <div class="pt-3 pb-1 text-xs uppercase tracking-wide text-gray-400 font-semibold px-3">Gestión</div>
         <a href="<?= url('admin') ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition">
           <span class="text-lg">🏢</span> Mis Negocios
@@ -100,8 +114,8 @@ $flash = flash();
         </a>
         <?php endif; ?>
 
-        <!-- PRESTADOR -->
-        <?php if (hasRole('prestador')): ?>
+        <!-- PRESTADOR (strict) -->
+        <?php if ($role === 'prestador'): ?>
         <div class="pt-3 pb-1 text-xs uppercase tracking-wide text-gray-400 font-semibold px-3">Gestión</div>
         <a href="<?= url('admin/micrositio') ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition">
           <span class="text-lg">🏢</span> Mi Micrositio
@@ -117,8 +131,8 @@ $flash = flash();
         </a>
         <?php endif; ?>
 
-        <!-- COLABORADOR -->
-        <?php if (hasRole('colaborador')): ?>
+        <!-- COLABORADOR (strict) -->
+        <?php if ($role === 'colaborador'): ?>
         <div class="pt-3 pb-1 text-xs uppercase tracking-wide text-gray-400 font-semibold px-3">Turismo</div>
         <a href="<?= url('colaborador') ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition">
           <span class="text-lg">📊</span> Dashboard Turismo
@@ -129,10 +143,13 @@ $flash = flash();
         <a href="<?= url('colaborador/metricas') ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition">
           <span class="text-lg">📈</span> Métricas
         </a>
+        <a href="<?= url('mi-perfil') ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition">
+          <span class="text-lg">👤</span> Mi Perfil
+        </a>
         <?php endif; ?>
 
-        <!-- TURISTA -->
-        <?php if (hasRole('turista')): ?>
+        <!-- TURISTA (strict) - only for actual turista role -->
+        <?php if ($role === 'turista'): ?>
         <a href="<?= url('turista') ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition">
           <span class="text-lg">👤</span> Mi Perfil Turista
         </a>

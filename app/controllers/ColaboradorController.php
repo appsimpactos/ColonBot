@@ -69,7 +69,7 @@ class ColaboradorController extends Controller
 
     public function events(): void
     {
-        $this->requireAuth('colaborador');
+        $this->requireAuth('admin');
 
         $pendingPromos = $this->promotions->pendingForApproval();
         $activePromos = $this->promotions->active();
@@ -129,7 +129,7 @@ class ColaboradorController extends Controller
 
     public function resetRatings(string $businessId): void
     {
-        $this->requireAuth('colaborador');
+        $this->requireAuth('admin');
         $this->verifyCsrf();
 
         $db = Database::getInstance();
